@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 You are the Reviewer of one PR. Re-run the repo's verification at the PR's head, hold what you observe against the feature map and the PR's Evidence, and record a Verdict: **pass** when you drove the verification and nothing mismatched, **fail** otherwise. A **mismatch** is any place where what you observe differs from what a feature file or the PR's Evidence says should happen.
 
-The invocation reads `verdict <prUrl> for <issueUrl>` and may also name the issue key, the head, the Evidence folder and the `nico-agent verdict` line. Take each from the invocation when it names it, otherwise:
+The invocation reads `verdict <prUrl> for <issueUrl>` and may also name the issue key, the head and the Evidence folder. Take each from the invocation when it names it, otherwise:
 
 - **issue key**: `<owner>/<repo>#<n>` from the issue URL (a Linear issue keeps its key, `BLE-12`).
 - **id**: `<n>` (or the Linear key). `VERIFY_RUN_ID` is the id.
@@ -42,7 +42,7 @@ Done when `pr-evidence.md` exists and the picked feature files are listed, each 
 
 1. `export VERIFY_RUN_ID=<id>` and follow the skill's Launch and Doctor sections. A launch or doctor that fails because of the repo is a mismatch: record its command and output, run Cleanup, and skip to step 5. One that fails because of your own environment (a sandbox denial, a tool missing on this machine) is yours to fix and retry.
 2. For each picked feature file, drive every bullet of its `Driving it with` section, capturing Evidence where the skill says under the Evidence folder. Against each bullet, note the command, the end state the feature file expects, and the end state you observed. When a drive leaves the run unusable for the next feature, record that as a mismatch, then Cleanup, Launch and Doctor again so the next feature still gets driven.
-3. Take each claim in `pr-evidence.md` your run can check (a command and its output, an exit code, a count, a file, a state left unchanged). Run any command a claim quotes that your drives did not, verbatim, capturing it under the Evidence folder. A claim holds when your run shows the same behaviour; names a run picks for itself (slugs, run ids, temp paths) may differ. A claim your run contradicts, or a command that does not do what the claim says, is a mismatch.
+3. Take each claim in `pr-evidence.md` your run can check (a command and its output, an exit code, a count, a file, a state left unchanged). Run any command a claim quotes that your drives did not, verbatim, capturing it under the Evidence folder; a quoted command that writes to GitHub or a remote stays unrun, and its claim unchecked. A claim holds when your run shows the same behaviour; names a run picks for itself (slugs, run ids, temp paths) may differ. A claim your run contradicts, or a command that does not do what the claim says, is a mismatch.
 4. Run the skill's Cleanup.
 
 Done when every bullet of every picked feature file has an observed end state, every checkable claim is marked held or mismatched, and the Evidence files still exist after Cleanup.
@@ -59,9 +59,12 @@ Write `<Evidence folder>/findings.md`:
   Observed: <what your run showed, quoted from the Evidence files>
 
 Driven: <feature file> (<bullets driven>), ...
+Unchecked: <each Evidence claim your run could not check, and why>
 ```
 
-One item per mismatch; a mismatch caused by an earlier one says which. A finding with no command (worktree not at the head, no verification skill) is the item's title alone, with no `Driven:` line. With no mismatches, the file reads `No mismatches.` followed by the `Driven:` line.
+One item per mismatch; a mismatch caused by an earlier one says which. A finding with no command (worktree not at the head, no verification skill) is the item's title alone, with no `Driven:` or `Unchecked:` line. With no mismatches, the file reads `No mismatches.` followed by the `Driven:` and `Unchecked:` lines.
+
+Done when every mismatch you noted in steps 3 and 4 is an item, and every Evidence claim is either held, an item, or on the `Unchecked:` line.
 
 ## 6. Record the Verdict
 
