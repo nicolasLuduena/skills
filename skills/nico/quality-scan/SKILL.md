@@ -1,22 +1,29 @@
 ---
 name: quality-scan
-description: "Audit a Repo for bloat and shallow modules and file the top five findings as issues, without editing code."
+description: "Audit a Repo with ponytail-audit and a deepening scan and file the top findings as issues, at most five open at once, without editing code."
 disable-model-invocation: true
 ---
 
 # Quality scan
 
-Audit the Repo named by the argument (`owner/name`) and file its top findings as issues. You run in a checkout of that Repo. The checkout ends exactly as it started: you read and run read-only commands, and your only writes are issues and labels on the Repo's tracker.
+Audit the Repo named by the argument (`owner/name`) and file its top findings as issues on its **Source**, the issue tracker it works from. You run in a checkout of that Repo. The checkout ends exactly as it started: you read and run read-only commands, and your only writes are issues and labels on the Source.
 
-## 1. Read the rules
+## 1. Read the rules and count the free slots
 
 - `PRODUCT.md`, its `## Gardening` section: the **pre-approved** categories, one per item. No section, or no file, means nothing is pre-approved.
-- `AGENTS.md` or `CLAUDE.md`: the Repo's tracker (GitHub Issues through `gh`, or a Linear team) and how agents write to it, such as a bot wrapper used in place of `gh` or a fingerprint line every body must end with. Every write below follows these rules.
+- `AGENTS.md` or `CLAUDE.md`: the Repo's Source (GitHub Issues through `gh`, or a Linear team) and how agents write to it, such as a bot wrapper used in place of `gh` or a fingerprint line every body must end with. Every read and write below goes to that Source by those rules.
 - `GLOSSARY.md`, when present: its words go in every title and body you write.
-- The title of every open issue on the tracker (`gh issue list --repo <owner/name> --state open --limit 1000 --json number,title`).
-- `git rev-parse HEAD` and `git status --porcelain`, kept for step 5.
+- The Source's open issues: every title, and which of them carry the line `Filed by quality-scan.` in their body. On GitHub, `gh issue list --repo <owner/name> --state open --limit 1000 --json number,title`, then the same with `--search '"Filed by quality-scan" in:body' --json number,labels`.
+- `git rev-parse HEAD` and `git status --porcelain`: the checkout's starting state.
 
-Done when you hold the pre-approved list (maybe empty), the write rules, the open titles, and the checkout's starting state.
+The scan keeps at most five of its issues open, in two pools of **slots**:
+
+- **Gardening**: 3 slots, minus the open quality-scan issues labelled `gardening`.
+- **Triage**: 2 slots, minus the open quality-scan issues labelled `needs-triage`.
+
+A slot frees when its issue closes, or when the user triages it out of `needs-triage`. With no free slot in either pool, go straight to step 5: the run files nothing, whatever a scan would find.
+
+Done when you hold the pre-approved list (maybe empty), the write rules, the open titles, the free slots per pool, and the starting state.
 
 ## 2. Scan
 
@@ -30,25 +37,26 @@ Two passes over the whole Repo, both read-only.
    - tightly coupled modules leaking across their seams;
    - code that is untested, or hard to test through its interface.
 
-   Apply the deletion test to each suspect: deleting it would concentrate complexity, or only move it? Grade each candidate `Strong`, `Worth exploring` or `Speculative`. Write no report file and propose no interface.
+   Apply the deletion test to each suspect: deleting it would concentrate complexity, or only move it? Keep each candidate as a note of its files, the friction and its grade: `Strong`, `Worth exploring` or `Speculative`. The interface is designed later, by whoever takes the issue.
 
-Done when both passes have given their lists.
+Done when the audit has given its report, every hot spot has been walked, and every candidate is graded.
 
-## 3. Pick five
+## 3. Rank and choose
 
 Merge both lists into one ranking, each group keeping its own order: the audit's Must fix, the scan's Strong, the audit's Should fix, the scan's Worth exploring, the audit's Nice to have. Drop Speculative. Two entries naming the same change to the same code are one finding, at the higher rank.
 
-Take the first five. They are the run's whole budget: each is skipped or filed, and nothing past the fifth is looked at, so a re-run on an unchanged Repo files nothing. For each of the five, decide:
+Give each finding:
 
 - **Title**: what to do and where, in the Repo's words, e.g. `Delete the unused retry option (src/config.rs)`.
-- **Skip** when an open issue's title names the same change to the same code, whatever its wording.
-- **Category**: pre-approved when the finding falls squarely in one category of the `## Gardening` list. A finding in doubt is not pre-approved.
+- **Pool**: Gardening when the finding falls squarely in one category of the `## Gardening` list, else Triage. A finding in doubt goes to Triage.
 
-Done when each of the five is marked skip, or file with its title and category.
+Then, pool by pool, walk the ranking from the top. **Skip** a finding when an open issue's title names the same change to the same code, whatever its wording; otherwise mark it file, until the pool's free slots are used.
+
+Done when every free slot holds a finding marked file, or the ranking has no finding left for its pool.
 
 ## 4. File
 
-File each finding marked file, in rank order, with this body:
+File each finding marked file, in rank order, with this body. The `Filed by quality-scan.` line is how the next run counts its slots: keep it verbatim.
 
 ```markdown
 ## What to build
@@ -57,7 +65,9 @@ File each finding marked file, in rank order, with this body:
 
 Files: `<path>`, `<path>`
 
-Category: <the pre-approved category, or "not pre-approved">. Filed by quality-scan.
+Category: <the pre-approved category, or "not pre-approved">.
+
+Filed by quality-scan.
 
 ## Acceptance criteria
 
@@ -69,12 +79,12 @@ Category: <the pre-approved category, or "not pre-approved">. Filed by quality-s
 None (can start immediately)
 ```
 
-Label it `gardening` and `ready-for-agent` when its category is pre-approved, else `needs-triage`. Create a label the tracker lacks before its first use. On Linear, the same title, body and labels go through the team the rules name.
+Label a Gardening finding `gardening` and `ready-for-agent`, a Triage finding `needs-triage`. Create a label the Source lacks before its first use.
 
 Done when every finding marked file has its issue with its labels.
 
 ## 5. Report
 
-Check the checkout: `git rev-parse HEAD` and `git status --porcelain` print what they printed in step 1. Remove anything the run left until they do.
+Check the checkout: `git rev-parse HEAD` and `git status --porcelain` print the starting state. When they differ, the run broke its contract: name every changed path in the report.
 
-End with one line per issue filed, in rank order: `<issue url> <title> [<labels>]`. With nothing filed, the one line is `Nothing filed: ` and why (every finding matched an open issue, or the scan found nothing).
+End with one line per issue filed, in rank order: `<issue url> <title> [<labels>]`. With nothing filed, the one line is `Nothing filed: ` and why (no free slot, every finding matched an open issue, or the scan found nothing).
