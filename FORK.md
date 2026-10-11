@@ -45,7 +45,7 @@ After porting, move the `frozen-*` tag to the upstream commit reviewed.
 
 | Skill | Job |
 | --- | --- |
-| `faux-nico` | Stands in for Nico when he is away. Answers an Implementer's question from the repo's `PRODUCT.md` when the docs settle it, otherwise leaves it for him. When the loop runs dry, dispatches existing gardening issues. |
+| [`faux-nico`](skills/nico/faux-nico/SKILL.md) | Stands in for Nico when he is away. Answers an Asking Implementer from the repo's `PRODUCT.md`, the issue and its parent when they settle the question, otherwise ends so the question reaches him. |
 | `quality-scan` | Weekly per repo. Runs ponytail's bloat audit and Matt's deepening scan and files issues: pre-approved categories as `ready-for-agent` + `gardening`, the rest as `needs-triage`. |
 | `morning` | Once a day. Reads the night's action log and PRs and writes `morning.md`: merge these in this order, these need an answer, these failed, this gardening landed, these ideas were filed. |
 

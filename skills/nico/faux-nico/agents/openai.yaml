@@ -1,0 +1,5 @@
+interface:
+  display_name: "faux-nico"
+  short_description: "Answer an Asking Implementer from PRODUCT.md"
+policy:
+  allow_implicit_invocation: false
