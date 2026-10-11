@@ -50,12 +50,23 @@ After porting, move the `frozen-*` tag to the upstream commit reviewed.
 
 Planned, not yet written: the merge-conflict flow.
 
-## Verification
+## Verification: Lauren Tan's, with credit
 
-Not ours. pstack's `create-verification-skill` and
-`maintain-verification-skill` (in `cursor/plugins`) are to be read first and
-then adopted, tweaked, or replaced. Decision pending. Pilot repo:
-`txpipe-shop/audit-notes`.
+`skills/pstack/` holds two skills from [pstack](https://github.com/cursor/plugins/tree/main/pstack)
+by Lauren Tan ([poteto](https://github.com/poteto)), MIT, copied at
+`cursor/plugins@9d76bca` on 2026-10-11 with her license beside them. Her
+"trust first, then parallel" and verification-as-evidence are the ideas this
+whole fork is built around. Read them in her words: the
+[generator](https://github.com/cursor/plugins/blob/main/pstack/skills/create-verification-skill/SKILL.md)
+and the [upkeep pass](https://github.com/cursor/plugins/blob/main/pstack/skills/maintain-verification-skill/SKILL.md).
+
+| Skill | Hers, repointed |
+| --- | --- |
+| `pstack/create-verification-skill` | Generates a repo's `verify-<app>` skill and feature map. Output lands in `.agents/skills/` so every Harness finds it; Evidence goes to `.evidence/<issue>/`, copied to the Bucket on Verdict. |
+| `pstack/maintain-verification-skill` | Keeps the feature map honest. Run weekly per Repo by the loop as a gardening issue. |
+
+Each file starts with a `> Fork:` note naming the source and the change.
+Pilot repo: `txpipe-shop/audit-notes`.
 
 ## Installing
 
