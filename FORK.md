@@ -48,6 +48,7 @@ After porting, move the `frozen-*` tag to the upstream commit reviewed.
 | `faux-nico` | Stands in for Nico when he is away. Answers an Implementer's question from the repo's `PRODUCT.md` when the docs settle it, otherwise leaves it for him. When the loop runs dry, dispatches existing gardening issues. |
 | `quality-scan` | Weekly per repo. Runs ponytail's bloat audit and Matt's deepening scan and files issues: pre-approved categories as `ready-for-agent` + `gardening`, the rest as `needs-triage`. |
 | `morning` | Once a day. Reads the night's action log and PRs and writes `morning.md`: merge these in this order, these need an answer, these failed, this gardening landed, these ideas were filed. |
+| `verdict` | The Reviewer's. Re-runs the repo's verification skill at the PR's head, holds the PR's Evidence against it, and records pass or fail with `nico-agent verdict`. Never writes to GitHub. |
 
 Planned, not yet written: the merge-conflict flow.
 

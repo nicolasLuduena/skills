@@ -1,0 +1,5 @@
+interface:
+  display_name: "Verdict"
+  short_description: "Re-run the verification at a PR's head and record the Verdict"
+policy:
+  allow_implicit_invocation: false
