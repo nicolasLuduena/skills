@@ -9,6 +9,8 @@ metadata:
     url: "https://github.com/humanlayer/skills/blob/main/plugins/show-me/skills/show-me/SKILL.md"
 ---
 
+> Fork: the Evidence section carries what the verification skill observed, per feature, with a link to the Evidence files.
+
 Use this template for writing the PR body:
 
 ```markdown
@@ -20,6 +22,10 @@ Use this template for writing the PR body:
 
 - **Before:** <screenshot/output/failing test run>
   **After:** <screenshot/output/passing test run>
+
+Verified with `verify-<app>`, run `<VERIFY_RUN_ID>`: <link to the Evidence folder>
+
+- **<feature file>:** <the command driven> → <the observed end state, quoted from the Evidence>
 
 ## Merge Danger
 
@@ -162,6 +168,8 @@ Concrete evidence that the change works. Show a before and after.
 Screenshots are S-tier - when the environment is set up for it and the change is visual.
 
 Execution-based evidence is A-tier. Test results, console output. Show the exact test that now fails and passes, using pseudocode.
+
+The verification lines come from the Verify step of `implement`: one line per feature file driven, quoting the command and the end state from the files under `.evidence/<VERIFY_RUN_ID>/`, so a reader can check the claim against the artifact. Link the folder: the Bucket URL when the dispatch prompt gives one, else the repo-relative path. When the repo has no verification skill, write "No verification skill in this repo" in place of these lines, so its absence is visible rather than silent.
 
 ### Merge Danger
 
