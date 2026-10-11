@@ -28,8 +28,9 @@ After porting, move the `frozen-*` tag to the upstream commit reviewed.
 ## Layout
 
 - `skills/engineering/`, `skills/productivity/`, `skills/misc/`: Matt's
-  skills. Most are untouched. An edited one starts with a `> Fork:` note
-  saying what changed and why, so a diff against upstream stays readable.
+  skills. Most are untouched. An edited one records what changed and why
+  under `metadata.fork` in its frontmatter, where the agent never reads it,
+  so a diff against upstream stays readable.
 - `skills/nico/`: ours. Skills Matt does not have, written for the
   nico-agent loop.
 
@@ -65,7 +66,7 @@ and the [upkeep pass](https://github.com/cursor/plugins/blob/main/pstack/skills/
 | `pstack/create-verification-skill` | Generates a repo's `verify-<app>` skill and feature map. Output lands in `.agents/skills/` so every Harness finds it; Evidence goes to `.evidence/<issue>/`, copied to the Bucket on Verdict. |
 | `pstack/maintain-verification-skill` | Keeps the feature map honest. Run weekly per Repo by the loop as a gardening issue. |
 
-Each file starts with a `> Fork:` note naming the source and the change.
+Each copied or edited file records its source and change under `metadata.fork` in its frontmatter, where the agent never reads it.
 Pilot repo: `txpipe-shop/audit-notes`.
 
 ## Installing
