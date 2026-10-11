@@ -2,9 +2,12 @@
 name: create-verification-skill
 description: "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform. Use for /create-verification-skill, \"make a control skill for this repo\", or when a project has no scripted way to prove UI/CLI/service behavior."
 disable-model-invocation: true
+metadata:
+  fork:
+    source: https://github.com/cursor/plugins/tree/main/pstack (Lauren Tan, poteto; MIT, see ../LICENSE)
+    copied: cursor/plugins@9d76bca, 2026-10-11
+    change: "Generated skill lives in .agents/skills/verify-<app>/ so every Harness finds it; Evidence under .evidence/<issue>/, copied to the Bucket on Verdict and linked from the PR body."
 ---
-
-> Fork: from [pstack](https://github.com/cursor/plugins/tree/main/pstack) by Lauren Tan ([poteto](https://github.com/poteto)), MIT (see `../LICENSE`), copied at `cursor/plugins@9d76bca` on 2026-10-11. Her skill, lightly repointed for the nico-agent loop: the generated skill lives in `.agents/skills/verify-<app>/` so every Harness finds it, and Evidence artifacts go under `.evidence/<issue>/` in the worktree, which nico-agent copies to the Bucket on Verdict and the PR body links to.
 
 # Create a verification skill
 

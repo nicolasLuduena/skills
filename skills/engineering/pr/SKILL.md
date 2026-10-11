@@ -2,14 +2,14 @@
 name: pr
 description: "Use when writing a PR body."
 metadata:
+  fork:
+    change: "The Evidence section quotes what the verification skill observed per feature and links the Evidence files."
   credits:
     skill: show-me
     author: Dex Horthy
     organisation: Humanlayer
     url: "https://github.com/humanlayer/skills/blob/main/plugins/show-me/skills/show-me/SKILL.md"
 ---
-
-> Fork: the Evidence section carries what the verification skill observed, per feature, with a link to the Evidence files.
 
 Use this template for writing the PR body:
 

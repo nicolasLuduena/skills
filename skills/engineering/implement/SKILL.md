@@ -2,9 +2,10 @@
 name: implement
 description: "Implement a piece of work based on a spec or set of tickets."
 disable-model-invocation: true
+metadata:
+  fork:
+    change: "Adds the Verify step: the change ships with Evidence from the repo's verification skill, not only green tests."
 ---
-
-> Fork: adds the Verify step, so a change ships with Evidence from the repo's verification skill, not only green tests.
 
 Implement the work described by the user in the spec or tickets.
 

@@ -2,9 +2,12 @@
 name: maintain-verification-skill
 description: "Periodic pass that keeps a project's verification skill and feature map honest: parallel source readers per feature, one live session driving every feature, at most one PR of proven corrections. Use for /maintain-verification-skill or \"audit the verify skill\"."
 disable-model-invocation: true
+metadata:
+  fork:
+    source: https://github.com/cursor/plugins/tree/main/pstack (Lauren Tan, poteto; MIT, see ../LICENSE)
+    copied: cursor/plugins@9d76bca, 2026-10-11
+    change: "Looks under .agents/skills/verify-*/; the nico-agent loop runs it weekly per Repo as a gardening issue, so `changed` ships through the normal Implementer flow."
 ---
-
-> Fork: from [pstack](https://github.com/cursor/plugins/tree/main/pstack) by Lauren Tan ([poteto](https://github.com/poteto)), MIT (see `../LICENSE`), copied at `cursor/plugins@9d76bca` on 2026-10-11. Her skill, lightly repointed for the nico-agent loop: it looks for the skill under `.agents/skills/verify-*/`, and the nico-agent loop runs it weekly per Repo as a gardening issue, so `changed` ships its PR through the normal Implementer flow.
 
 # Maintain a verification skill
 
