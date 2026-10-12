@@ -1,2 +1,4 @@
 node_modules
 .claude
+# Evidence goes to the Bucket, never this public repo: it quotes private Repos.
+.evidence
