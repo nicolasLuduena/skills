@@ -1,0 +1,5 @@
+interface:
+  display_name: "Quality Scan"
+  short_description: "File a Repo's top bloat and deepening findings as issues"
+policy:
+  allow_implicit_invocation: false
