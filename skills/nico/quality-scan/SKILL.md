@@ -13,7 +13,7 @@ Audit the Repo named by the argument (`owner/name`) and file its top findings as
 - `PRODUCT.md`, its `## Gardening` section: the **pre-approved** categories, one per item. No section, or no file, means nothing is pre-approved.
 - `AGENTS.md` or `CLAUDE.md`: the Repo's Source (GitHub Issues through `gh`, or a Linear team) and how agents write to it, such as a bot wrapper used in place of `gh` or a fingerprint line every body must end with. Every read and write below goes to that Source by those rules.
 - `GLOSSARY.md`, when present: its words go in every title and body you write.
-- The Source's open issues: every title, and which of them carry the line `Filed by quality-scan.` in their body. On GitHub, `gh issue list --repo <owner/name> --state open --limit 1000 --json number,title`, then the same with `--search '"Filed by quality-scan" in:body' --json number,labels`.
+- The Source's open issues: every title, and which of them contain `Filed by quality-scan.` anywhere in their body. On GitHub, `gh issue list --repo <owner/name> --state open --limit 1000 --json number,title`, then the same with `--search '"Filed by quality-scan" in:body' --json number,labels`.
 - `git rev-parse HEAD` and `git status --porcelain`: the checkout's starting state.
 
 The scan keeps at most five of its issues open, in two pools of **slots**:
