@@ -16,7 +16,7 @@ Run the command your prompt gives, verbatim. When it fails, end your turn with i
 
 Its JSON holds, among other fields:
 
-- `dispatches[]`: every **Dispatch** (one issue sent to one Implementer agent), live and Closed, oldest first. Each has `issue` (its key: `owner/repo#N`, or a Linear key like `BLE-12`), `url` (the issue's), `title`, `repo`, `branch`, `stage` (`Implementing`, `PR draft`, `Verified`, `Merged`, `Closed` or `Failed`), `pr` (its PR as last seen, with `url` and `base`, or null), `stacked_on` (when its PR is stacked on another PR: that PR's `url`), `asking` (`{since, question}` while its agent waits on the user), `failure` (`{step, error, reason}`, `reason` optional) and `restarts` (`{at, reason, by}`, oldest first).
+- `dispatches[]`: every **Dispatch** (one issue sent to one Implementer agent), live and Closed, oldest first. Each has `issue` (its key: `owner/repo#N`, or a Linear key like `BLE-12`), `url` (the issue's), `title`, `repo`, `branch`, `base` (the branch its PR targets), `stage` (`Implementing`, `PR draft`, `Verified`, `Merged`, `Closed` or `Failed`), `pr` (its PR as last seen, with `url`, or null), `stacked_on` (the PR it was started on, with `url` and `head_branch`; its PR still sits on that one while `head_branch` is its `base`), `asking` (`{since, question}` while its agent waits on the user), `failure` (`{step, error, reason}`, `reason` optional) and `restarts` (`{at, reason, by}`, oldest first).
 - `merged[]` and `closed[]`: the Dispatches whose PR merged since last time, and those Closed since last time without merging. Same shape.
 - `answers[]`: each answer typed into a waiting agent since last time, `{issue, question, text, by}`, `by` being `user` or `faux-nico`.
 - `scans[]`: each quality-scan run since last time, with its `repo`.
@@ -25,7 +25,7 @@ Done when the command printed JSON and you hold these lists.
 
 ## 2. Ask the Source
 
-Two sections need what the issue tracker, the **Source**, holds. A key `owner/repo#N` is a GitHub issue, read with `gh`; any other key is a Linear issue, read with the Linear tool you have.
+Two sections need what the issue tracker, the **Source**, holds. A key `owner/repo#N` is a GitHub issue, read with `gh` as below. A Repo whose keys are Linear keys has Linear as its Source: ask the Linear tool you have the same two things, an issue's labels and the issues created after `<time>` whose description contains `Filed by quality-scan.`
 
 - **Gardening.** For each Dispatch in `merged` and `closed`, its labels: `gh issue view <its url> --json labels`. It is gardening when one of them is `gardening`.
 - **Filed.** For each distinct `repo` in `scans`, the issues quality-scan filed there since last time:
@@ -44,7 +44,7 @@ Write the file at the path your prompt gives. It holds exactly six sections, in 
 
 nico-agent notifies the user with the file's first line that is not a heading, so the first PR to merge, or `Nothing to merge`, leads.
 
-**`## Merge these`**: every Dispatch whose `stage` is `Verified`, numbered: `1. <pr url> <issue key> <title>`. Group them by `repo`, the Repos in the order they first appear in `dispatches`. Within a Repo keep `dispatches` order, except that a PR comes after the PR it is stacked on: its `stacked_on.url` is that PR's url, or its `pr.base` is that Dispatch's `branch`. A PR stacked on a PR that is not in this list waits on that one: it goes last in its Repo, its line ending with `, stacked on <that PR's url>`. Empty: `Nothing to merge`.
+**`## Merge these`**: every Dispatch whose `stage` is `Verified`, numbered: `1. <pr url> <issue key> <title>`. Group them by `repo`, the Repos in the order they first appear in `dispatches`. Within a Repo keep `dispatches` order, except that a PR comes after the PR it still sits on (`stacked_on.url`, while `stacked_on.head_branch` is its `base`). A PR sitting on a PR that is not in this list waits on that one: it goes last in its Repo, its line ending with `, stacked on <that PR's url>`. Empty: `Nothing to merge`.
 
 **`## Answer these`**: every Dispatch with `asking` set: `- <issue key>: "<question>"`, an empty question written `(no question read)`. Empty: `Nothing needs you`.
 
