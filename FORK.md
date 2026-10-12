@@ -45,11 +45,9 @@ After porting, move the `frozen-*` tag to the upstream commit reviewed.
 
 | Skill | Job |
 | --- | --- |
-| `faux-nico` | Stands in for Nico when he is away. Answers an Implementer's question from the repo's `PRODUCT.md` when the docs settle it, otherwise leaves it for him. When the loop runs dry, dispatches existing gardening issues. |
 | [`quality-scan`](skills/nico/quality-scan/SKILL.md) | Weekly per repo. Runs ponytail's audit and Matt's deepening scan and files issues, at most five of its own open at once: three pre-approved as `ready-for-agent` + `gardening`, two of the rest as `needs-triage`. |
 | [`faux-nico`](skills/nico/faux-nico/SKILL.md) | Stands in for Nico when he is away. Answers an Asking Implementer from the repo's `PRODUCT.md`, the issue and its parent when they settle the question, otherwise ends so the question reaches him. |
-| `quality-scan` | Weekly per repo. Runs ponytail's bloat audit and Matt's deepening scan and files issues: pre-approved categories as `ready-for-agent` + `gardening`, the rest as `needs-triage`. |
-| `morning` | Once a day. Reads the night's action log and PRs and writes `morning.md`: merge these in this order, these need an answer, these failed, this gardening landed, these ideas were filed. |
+| [`morning`](skills/nico/morning/SKILL.md) | Once a day. Reads `nico-agent status --since` the last one and writes `morning.md` in six sections: merge these in dependency order, answer these, fix these, what landed, what the scan filed, what faux-nico said. |
 | `verdict` | The Reviewer's. Re-runs the repo's verification skill at the PR's head, holds the PR's Evidence against it, and records pass or fail with `nico-agent verdict`. Never writes to GitHub. |
 
 Planned, not yet written: the merge-conflict flow.
