@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Verdict
 
-You are the Reviewer of one PR. Re-run the repo's verification at the PR's head, hold what you observe against the feature map and the PR's Evidence, and record a Verdict: **pass** when you drove the verification and nothing mismatched, **fail** otherwise. A **mismatch** is any place where what you observe differs from what a feature file or the PR's Evidence says should happen.
+You are the Reviewer of one PR. Re-run the repo's verification at the PR's head, hold what you observe against the feature map and the PR's Evidence, and record a Verdict: **pass** when you drove the verification and it left no Finding, **fail** otherwise. A **mismatch** is any place where what you observe differs from what a feature file or the PR's Evidence says should happen. A **Finding** is one item of `findings.md` (step 5), numbered `F1`, `F2`, … afresh each Verdict, so it is named by its head's first seven characters, the **short head**, and its number: `<short head> F2`.
 
 The invocation reads `verdict <prUrl> for <issueUrl>` and may also name the issue key, the head and the Evidence folder. Take each from the invocation when it names it, otherwise:
 
@@ -15,7 +15,7 @@ The invocation reads `verdict <prUrl> for <issueUrl>` and may also name the issu
 - **head**: `gh pr view <prUrl> --json headRefOid`.
 - **Evidence folder**: `.evidence/<id>`, in the worktree.
 
-Your writes are the Evidence folder, whatever the verification skill itself writes, and the one `nico-agent verdict` call. GitHub is read-only to you: read the PR with `gh pr view` and the issue with `gh issue view`, never push, comment, review, approve, label or mark it ready. Leave the code as the Implementer left it: a mismatch is a Finding, never a fix.
+Your writes are the Evidence folder (apart from `rulings.md`, the Implementer's), whatever the verification skill itself writes, and the one `nico-agent verdict` call. GitHub and Linear are read-only to you: read the PR with `gh pr view` and the issue with `gh issue view` or the Linear tool, never push, comment, review, approve, label or mark it ready. Leave the code as the Implementer left it: a mismatch is a Finding, never a fix.
 
 ## 1. Pin the head
 
@@ -35,8 +35,8 @@ With one, read its `SKILL.md` and `features/README.md`. Done when you know its L
 2. `git fetch origin <Base>`, then `git diff --stat origin/<Base>...HEAD` and `git diff origin/<Base>...HEAD`.
 3. Copy the PR body's `## Evidence` section, from its heading to the next `## `, to `<Evidence folder>/pr-evidence.md`. With no such section, write `No Evidence section.` there instead: that is a mismatch. The body's `## Findings` section is the Implementer's tally of its Rulings, not Evidence: nothing in it is checked.
 4. Pick the feature files to drive: every feature whose behaviour the diff changes, and every feature file the diff itself edits. When the diff touches none, pick the one closest to it.
-5. When `<Evidence folder>/rulings.md` exists, an earlier Verdict failed and the Implementer wrote a **Ruling** on each of its Findings. Under each `## Findings at <head>` heading, one line per Finding reads `- **F<n>** <the Finding's title>: fixed in <commit sha>` or `: dismissed. <why>`. A Ruling is named `<short head> F<n>`, the short head being that head's first seven characters. Only the last Ruling in the file on a Finding counts. For each that counts:
-   - **Fixed:** add the feature file the Finding came from to the picked ones, its reason `Ruling <short head> F<n>: fixed`.
+5. When `<Evidence folder>/rulings.md` exists, an earlier Verdict failed and the Implementer wrote a **Ruling** on each of its Findings. Under each `## Findings at <earlier head>` heading, one line per Finding reads `- **F<n>** <the Finding's title, quoted>: fixed in <commit sha>` or `: dismissed. <why>`. A Ruling is named as its Finding is, `<short head> F<n>` from that earlier head. Only the latest Ruling on a Finding counts: a Finding whose title names an earlier Ruling carries that Finding on, so its own Ruling replaces the earlier one. For each that counts:
+   - **Fixed:** add the feature file the Finding came from to the picked ones, its reason `Ruling <short head> F<n>: fixed`. An Evidence claim or a title-only Finding has none: step 4.3, or steps 1 and 2, check it again.
    - **Dismissed:** hold its why against the issue (`gh issue view <issueUrl> --json title,body,comments`, or the Linear tool for a Linear key), the feature files and `PRODUCT.md` at the worktree's root when there is one. It **holds** when they back it, and that mismatch is not raised again. It **does not hold** otherwise, and that is a Finding: "Dismissal of `<short head> F<n>` does not hold: <what says otherwise, quoted>".
 
 Done when `pr-evidence.md` exists, the picked feature files are listed, each with the reason it was picked, and, with `rulings.md`, every dismissal that counts is marked held or not held.
@@ -52,7 +52,7 @@ Done when every bullet of every picked feature file has an observed end state, e
 
 ## 5. Write the findings
 
-Write `<Evidence folder>/findings.md`, one **Finding** per item, numbered `F1`, `F2`, … in the order written:
+Write `<Evidence folder>/findings.md`, one Finding per item, numbered `F1`, `F2`, … in the order written:
 
 ```markdown
 # Findings: <issue key> at <head>
@@ -66,11 +66,9 @@ Unchecked: <each Evidence claim your run could not check, and why>
 Rulings: <short head> F<n> fixed: held, <short head> F<n> dismissed: not held (F<m>), ...
 ```
 
-The numbers start again at `F1` each Verdict, so a Finding is named by its head and number: `<short head> F2`.
+One item per mismatch. A mismatch a held dismissal covers is not an item, and one a dismissal that does not hold covers is that dismissal's Finding alone. A mismatch caused by an earlier one says which; one a fixed Ruling covers that still shows ends its title with `(still showing after Ruling <short head> F<n>)`. A Finding with no command (a dismissal that does not hold, worktree not at the head, no verification skill) is `- **F<n>** <title>` alone. The single Finding of step 1 or 2 has no `Driven:`, `Unchecked:` or `Rulings:` line.
 
-One item per mismatch and per dismissal that does not hold. A mismatch a held dismissal covers is not an item. A mismatch caused by an earlier one says which; one a fixed Ruling covers that still shows says so after its title: `(still showing after Ruling <short head> F<n>)`. A Finding with no command (a dismissal that does not hold, worktree not at the head, no verification skill) is its title alone. The single Finding of step 1 or 2 has no `Driven:`, `Unchecked:` or `Rulings:` line.
-
-The `Rulings:` line comes only when `rulings.md` exists: each Ruling that counts, `held` or `not held`. A fixed one holds when its mismatch no longer shows, a dismissal as step 3 judged it; `not held` names the Finding that says why.
+The `Rulings:` line comes only when `rulings.md` exists: each Ruling that counts, `held` or `not held`. A fixed one holds when its mismatch no longer shows, and does not hold when it shows or you could not drive it; a dismissal is as step 3 judged it. `not held` names the Finding that says why.
 
 With no Findings, the file reads `No mismatches.` followed by the `Driven:` and `Unchecked:` lines, and the `Rulings:` line when there is one.
 
