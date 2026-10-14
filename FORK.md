@@ -48,7 +48,7 @@ After porting, move the `frozen-*` tag to the upstream commit reviewed.
 | [`quality-scan`](skills/nico/quality-scan/SKILL.md) | Weekly per repo. Runs ponytail's audit and Matt's deepening scan and files issues, at most five of its own open at once: three pre-approved as `ready-for-agent` + `gardening`, two of the rest as `needs-triage`. |
 | [`faux-nico`](skills/nico/faux-nico/SKILL.md) | Stands in for Nico when he is away. Answers an Asking Implementer from the repo's `PRODUCT.md`, the issue and its parent when they settle the question, otherwise ends so the question reaches him. |
 | [`morning`](skills/nico/morning/SKILL.md) | Once a day. Reads what `nico-agent status --since` shows since the last one and writes `morning.md` in six sections: merge these in dependency order, answer these, fix these, what landed, what the scan filed, what faux-nico said. |
-| `verdict` | The Reviewer's. Re-runs the repo's verification skill at the PR's head, holds the PR's Evidence against it, and records pass or fail with `nico-agent verdict`. Never writes to GitHub. |
+| [`verdict`](skills/nico/verdict/SKILL.md) | The Reviewer's. Re-runs the repo's verification skill at the PR's head, holds the PR's Evidence against it, holds the Implementer's Rulings on earlier Findings to account, and records pass or fail with `nico-agent verdict`. Never writes to GitHub. |
 
 Planned, not yet written: the merge-conflict flow.
 
