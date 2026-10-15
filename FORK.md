@@ -27,34 +27,41 @@ After porting, move the `frozen-*` tag to the upstream commit reviewed.
 
 ## Layout
 
-- `skills/engineering/`, `skills/productivity/`, `skills/misc/`: Matt's
-  skills. Most are untouched. An edited one records what changed and why
-  under `metadata.fork` in its frontmatter, where the agent never reads it,
-  so a diff against upstream stays readable.
-- `skills/nico/`: ours. Skills Matt does not have, written for the
-  nico-agent loop.
+- `skills/loop/`: what nico-agent's prompts call (`implement`, `research`,
+  `verdict`, `faux-nico`, `quality-scan`, `morning`) and what those call
+  (`pr`, `tdd`, `code-review`, `codebase-design`). Matt's, apart from the
+  four under "Our skills".
+- `skills/verify/`: Lauren Tan's two, below.
+- `skills/hand/`: Matt's skills I invoke myself. Most are untouched.
+- Everything else of Matt's (docs pages, changesets, plugin manifests, the
+  release workflow, `misc/`, `in-progress/`, `ask-matt`) is gone: this fork
+  installs by symlink and publishes nothing, so a skill edit is a skill edit.
+
+An edited upstream skill records what changed and why under `metadata.fork`
+in its frontmatter, where the agent never reads it, so a diff against
+upstream stays readable.
 
 ### Edited upstream skills
 
 | Skill | Change |
 | --- | --- |
-| `engineering/implement` | A verification phase: run the repo's verification skill against the change and capture evidence before the PR. |
-| `engineering/pr` | A mandatory Evidence section in the PR body, with links to the evidence bucket. |
+| `loop/implement` | A verification phase: run the repo's verification skill against the change and capture evidence before the PR. |
+| `loop/pr` | A mandatory Evidence section in the PR body, with links to the evidence bucket. |
 
-### Our skills (`skills/nico/`)
+### Our skills (`skills/loop/`)
 
 | Skill | Job |
 | --- | --- |
-| [`quality-scan`](skills/nico/quality-scan/SKILL.md) | Weekly per repo. Runs ponytail's audit and Matt's deepening scan and files issues, at most five of its own open at once: three pre-approved as `ready-for-agent` + `gardening`, two of the rest as `needs-triage`. |
-| [`faux-nico`](skills/nico/faux-nico/SKILL.md) | Stands in for Nico when he is away. Answers an Asking Implementer from the repo's `PRODUCT.md`, the issue and its parent when they settle the question, otherwise ends so the question reaches him. |
-| [`morning`](skills/nico/morning/SKILL.md) | Once a day. Reads what `nico-agent status --since` shows since the last one and writes `morning.md` in six sections: merge these in dependency order, answer these, fix these, what landed, what the scan filed, what faux-nico said. |
-| [`verdict`](skills/nico/verdict/SKILL.md) | The Reviewer's. Re-runs the repo's verification skill at the PR's head, holds the PR's Evidence against it, holds the Implementer's Rulings on earlier Findings to account, and records pass or fail with `nico-agent verdict`. Never writes to GitHub. |
+| [`quality-scan`](skills/loop/quality-scan/SKILL.md) | Weekly per repo. Runs ponytail's audit and Matt's deepening scan and files issues, at most five of its own open at once: three pre-approved as `ready-for-agent` + `gardening`, two of the rest as `needs-triage`. |
+| [`faux-nico`](skills/loop/faux-nico/SKILL.md) | Stands in for Nico when he is away. Answers an Asking Implementer from the repo's `PRODUCT.md`, the issue and its parent when they settle the question, otherwise ends so the question reaches him. |
+| [`morning`](skills/loop/morning/SKILL.md) | Once a day. Reads what `nico-agent status --since` shows since the last one and writes `morning.md` in six sections: merge these in dependency order, answer these, fix these, what landed, what the scan filed, what faux-nico said. |
+| [`verdict`](skills/loop/verdict/SKILL.md) | The Reviewer's. Re-runs the repo's verification skill at the PR's head, holds the PR's Evidence against it, holds the Implementer's Rulings on earlier Findings to account, and records pass or fail with `nico-agent verdict`. Never writes to GitHub. |
 
 Planned, not yet written: the merge-conflict flow.
 
 ## Verification: Lauren Tan's, with credit
 
-`skills/pstack/` holds two skills from [pstack](https://github.com/cursor/plugins/tree/main/pstack)
+`skills/verify/` holds two skills from [pstack](https://github.com/cursor/plugins/tree/main/pstack)
 by Lauren Tan ([poteto](https://github.com/poteto)), MIT, copied at
 `cursor/plugins@9d76bca` on 2026-10-11 with her license beside them. Her
 "trust first, then parallel" and verification-as-evidence are the ideas this
@@ -64,20 +71,14 @@ and the [upkeep pass](https://github.com/cursor/plugins/blob/main/pstack/skills/
 
 | Skill | Hers, repointed |
 | --- | --- |
-| `pstack/create-verification-skill` | Generates a repo's `verify-<app>` skill and feature map. Output lands in `.agents/skills/` so every Harness finds it; Evidence goes to `.evidence/<issue>/`, copied to the Bucket on Verdict. |
-| `pstack/maintain-verification-skill` | Keeps the feature map honest. Run weekly per Repo by the loop as a gardening issue. |
+| `verify/create-verification-skill` | Generates a repo's `verify-<app>` skill and feature map. Output lands in `.agents/skills/` so every Harness finds it; Evidence goes to `.evidence/<issue>/`, copied to the Bucket on Verdict. |
+| `verify/maintain-verification-skill` | Keeps the feature map honest. Run weekly per Repo by the loop as a gardening issue. |
 
 Each copied or edited file records its source and change under `metadata.fork` in its frontmatter, where the agent never reads it.
 Pilot repo: `txpipe-shop/audit-notes`.
 
 ## Installing
 
-Install from this repo with the `skills` CLI, one skill at a time, so
-`skills-lock.json` in each project points here:
-
-```sh
-npx skills add nicolasLuduena/skills --skill implement
-```
-
-Do not also install the `mattpocock-skills` plugin: every skill would show
-twice.
+`scripts/link-skills.sh` symlinks every skill into `~/.claude/skills` and
+`~/.agents/skills`. Do not also install the `mattpocock-skills` plugin:
+every skill would show twice.
