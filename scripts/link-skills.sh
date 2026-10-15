@@ -36,6 +36,9 @@ for DEST in "${DESTS[@]}"; do
 
   mkdir -p "$DEST"
 
+  # Drop links into this repo that no longer resolve: skills moved or removed.
+  find "$DEST" -maxdepth 1 -type l -lname "$REPO/*" ! -exec test -e {} \; -print -delete
+
   for i in "${!names[@]}"; do
     name="${names[$i]}"
     src="${srcs[$i]}"

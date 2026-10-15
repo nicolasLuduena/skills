@@ -1,4 +1,4 @@
-Skills live under `skills/` in three folders: `loop/` (what nico-agent's prompts call, and what those skills call), `verify/` (the two pstack skills) and `hand/` (user-invoked). `README.md` lists what belongs where; keep it true when a skill moves.
+Skills live under `skills/` in three folders: `loop/` (what nico-agent's prompts call, and what those skills call), `verify/` (the two pstack skills) and `hand/` (the ones I run myself: user-invoked, apart from those another skill calls). `README.md` lists what belongs where; keep it true when a skill moves.
 
 A skill is a folder with a `SKILL.md` and an `agents/openai.yaml`. A `SKILL.md` is user-invoked (`disable-model-invocation: true` in its frontmatter and `policy.allow_implicit_invocation: false` in `agents/openai.yaml`) or model-invoked (neither). One copied or edited from upstream records what changed and why under `metadata.fork` in its frontmatter, where the agent never reads it; `FORK.md` keeps the table of those.
 

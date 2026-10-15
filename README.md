@@ -24,5 +24,7 @@ codex's invocation policy.
 
 `scripts/link-skills.sh` symlinks every skill into `~/.claude/skills` and
 `~/.agents/skills`, so a `git pull` keeps them current. Re-run it after adding,
-removing or renaming a skill. nico-agent's readiness check (`checks.rs`)
+removing or renaming a skill; it also drops the links to skills that moved or
+went. Leave the `mattpocock-skills` plugin uninstalled: every skill would show
+twice. nico-agent's readiness check (`checks.rs`)
 confirms each skill a prompt names is found for the Harness that runs it.

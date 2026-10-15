@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Verdict
 
-You are the Reviewer of one PR. Re-run the repo's verification at the PR's head, hold what you observe against the feature map and the PR's Evidence, and record **pass** when nothing mismatched, **fail** otherwise. A **mismatch** is anything you observe that differs from what a feature file or the PR's Evidence says should happen. Each mismatch becomes a **Finding**, numbered `F1`, `F2`, … afresh per Verdict and named by the head's first seven characters: `<short head> F2`.
+You are the Reviewer of one PR. Re-run the repo's verification at the PR's head, hold what you observe against the feature map and the PR's Evidence, and record **pass** when you drove the verification and it left no Finding, **fail** otherwise. A **mismatch** is anything you observe that differs from what a feature file or the PR's Evidence says should happen. Each mismatch becomes a **Finding**, numbered `F1`, `F2`, … afresh per Verdict and named by the head's first seven characters, the **short head**: `<short head> F2`.
 
 The invocation reads `verdict <prUrl> for <issueUrl>`. From it: the **issue key** (`owner/repo#n`, or a Linear key such as `BLE-12`), the **id** (`n`, or the Linear key; `VERIFY_RUN_ID` is the id), the **head** (`gh pr view <prUrl> --json headRefOid`) and the **Evidence folder** (`.evidence/<id>` in the worktree). The invocation may name any of these itself.
 
@@ -21,17 +21,21 @@ You write only the Evidence folder (never its `rulings.md`, which is the Impleme
 1. `ls -d .agents/skills/verify-*/`. With none, skip to step 4 with the single Finding `No verification skill in this repo`. With one, read its `SKILL.md` and `features/README.md`.
 2. `gh pr view <prUrl> --json baseRefName,body`; `git fetch origin <Base>`; `git diff origin/<Base>...HEAD`.
 3. Copy the body's `## Evidence` section (to the next `## `) to `<Evidence folder>/pr-evidence.md`. No such section: write `No Evidence section.` there; that is a mismatch. Ignore the body's `## Findings` section, the Implementer's own tally.
-4. Pick the feature files to drive: every feature whose behaviour the diff changes, and every feature file the diff edits. When the diff touches none, the one closest to it.
-5. When `<Evidence folder>/rulings.md` exists, an earlier Verdict failed and the Implementer ruled on each Finding, one `## Findings at <head>` section per round, one line per Finding: `- **F<n>** "<title>": fixed in <sha>` or `: dismissed. <why>`. Only the latest Ruling with a given title counts. For each that counts:
-   - **fixed**: add the feature file the Finding came from to the picked ones; a Finding on an Evidence claim or with no feature file is re-checked in step 3.3 or step 1.
+4. Pick the feature files to drive, each with the reason it was picked: every feature whose behaviour the diff changes, and every feature file the diff edits. When the diff touches none, the one closest to it.
+5. When `<Evidence folder>/rulings.md` exists, an earlier Verdict failed and the Implementer ruled on each Finding, one `## Findings at <head>` section per round, one line per Finding: `- **F<n>** "<title>": fixed in <sha>` or `: dismissed. <why>`. Only the latest Ruling on a Finding counts: a Finding whose title names an earlier Ruling carries that Finding on, so its own Ruling replaces the earlier one. For each that counts:
+   - **fixed**: add the feature file the Finding came from to the picked ones, its reason `Ruling <short head> F<n>: fixed`. A Finding on an Evidence claim is re-checked in step 3.3, a title-only one in step 1 or 2.1.
    - **dismissed**: hold its why against the issue (`gh issue view <issueUrl> --json title,body,comments`, or the Linear tool), the feature files and `PRODUCT.md`. It **holds** when they back it, and that mismatch is not raised again. Otherwise it is a Finding: `Dismissal of <short head> F<n> does not hold: <what says otherwise, quoted>`.
+
+Done when you know the skill's Launch, Doctor, Evidence and Cleanup, `pr-evidence.md` exists, the picked feature files are listed with their reasons, and, with `rulings.md`, every dismissal that counts is marked held or not held.
 
 ## 3. Drive
 
 1. `export VERIFY_RUN_ID=<id>`; follow the skill's Launch and Doctor. A failure the repo causes is a mismatch (record the command and output, Cleanup, skip to step 4); one your environment causes (sandbox, missing tool) is yours to fix and retry.
-2. For each picked feature file, drive every bullet of its `Driving it with` section, capturing Evidence under the Evidence folder. Note per bullet the command, the end state expected and the end state observed. When a drive leaves the run unusable, record that, then Cleanup, Launch and Doctor again for the next feature.
-3. Check each claim in `pr-evidence.md` your run can check (a command and its output, an exit code, a count, a file). Run verbatim any quoted command your drives did not, capturing it, except one that writes to GitHub or a remote: that claim stays unchecked. Names a run picks for itself (slugs, run ids, temp paths) may differ; anything else that differs is a mismatch.
-4. Run the skill's Cleanup; the Evidence files must survive it.
+2. For each picked feature file, drive every bullet of its `Driving it with` section, capturing Evidence under the Evidence folder. Note per bullet the command, the end state expected and the end state observed. When a drive leaves the run unusable, record that as a mismatch, then Cleanup, Launch and Doctor again for the next feature.
+3. Check each claim in `pr-evidence.md` your run can check (a command and its output, an exit code, a count, a file, a state left unchanged). Run verbatim any quoted command your drives did not, capturing it, except one that writes to GitHub or a remote: that claim stays unchecked. Names a run picks for itself (slugs, run ids, temp paths) may differ; anything else that differs is a mismatch.
+4. Run the skill's Cleanup.
+
+Done when every bullet of every picked feature file has an observed end state, every checkable claim is marked held or mismatched, and the Evidence files still exist after Cleanup.
 
 ## 4. Write the findings
 
@@ -49,7 +53,9 @@ Unchecked: <each Evidence claim you could not check, and why>
 Rulings: <short head> F<n> fixed: held, <short head> F<n> dismissed: not held (F<m>), ...
 ```
 
-One Finding per mismatch, except one a held dismissal covers. A Finding caused by an earlier one says which. A fixed Ruling whose mismatch still shows ends its title with `(still showing after Ruling <short head> F<n>)`. A Finding with no command (steps 1 and 2.1, a dismissal that does not hold) is `- **F<n>** <title>` alone, and the single Finding of step 1 or 2.1 has no `Driven:`, `Unchecked:` or `Rulings:` line. `Rulings:` appears only with `rulings.md`: a fixed Ruling is `held` when its mismatch no longer shows, a dismissed one as step 2.5 judged it; `not held` names the Finding that says why. With no Findings, the file reads `No mismatches.` followed by those lines.
+One Finding per mismatch, except one a held dismissal covers; a mismatch a dismissal that does not hold covers is that dismissal's Finding alone. A Finding caused by an earlier one says which. A fixed Ruling whose mismatch still shows ends its title with `(still showing after Ruling <short head> F<n>)`. A Finding with no command (steps 1 and 2.1, a dismissal that does not hold) is `- **F<n>** <title>` alone, and the single Finding of step 1 or 2.1 has no `Driven:`, `Unchecked:` or `Rulings:` line. `Rulings:` appears only with `rulings.md`, listing each Ruling that counts: a fixed one is `held` when its mismatch no longer shows, and `not held` when it shows or you could not drive it; a dismissed one as step 2.5 judged it. `not held` names the Finding that says why. With no Findings, the file reads `No mismatches.` followed by those lines.
+
+Done when every mismatch you noted in steps 2 and 3 is a numbered Finding, unless a held dismissal covers it; every dismissal that does not hold is one too; every Evidence claim is held, a Finding, or on the `Unchecked:` line; and, with `rulings.md`, every Ruling that counts is on the `Rulings:` line.
 
 ## 5. Record the Verdict
 
@@ -57,4 +63,9 @@ One Finding per mismatch, except one a held dismissal covers. A Finding caused b
 nico-agent verdict <issue key> pass|fail --sha <head> --findings "$PWD/<Evidence folder>/findings.md"
 ```
 
-`pass` only when `findings.md` reads `No mismatches.`. A refusal naming a newer head means the PR moved: end, a Reviewer is started for that head. End with the `nico-agent` output and the path of `findings.md`.
+`pass` only when `findings.md` reads `No mismatches.`, `fail` otherwise. A refusal naming a newer head means the PR moved: end, a Reviewer is started for that head.
+
+- **Pass** is done when `findings.md` reads `No mismatches.` with every driven feature file on its `Driven:` line and, with `rulings.md`, every Ruling `held`, and `nico-agent` printed `verdict: <issue key> pass at <head>`.
+- **Fail** is done when `findings.md` holds one numbered Finding per mismatch and per dismissal that does not hold, and `nico-agent` printed `verdict: <issue key> fail at <head>`.
+
+End with the `nico-agent` output and the path of `findings.md`.
