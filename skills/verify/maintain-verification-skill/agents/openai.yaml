@@ -1,0 +1,5 @@
+interface:
+  display_name: "Maintain verification skill"
+  short_description: "Re-check a verify-<app> skill's feature map against the app"
+policy:
+  allow_implicit_invocation: false
