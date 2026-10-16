@@ -4,7 +4,7 @@ description: "Turn the current conversation into a spec and publish it to the pr
 disable-model-invocation: true
 metadata:
   fork:
-    change: "The spec gets no triage label: nico-agent dispatches any open ready-for-agent issue without sub-issues, so a labelled spec could go whole to one Implementer. Only the tickets to-tickets cuts from it get ready-for-agent."
+    change: "The spec gets no triage label: nico-agent dispatches any open ready-for-agent issue without sub-issues, so a labelled spec could go whole to one Implementer."
 ---
 
 This skill takes the current conversation context and codebase understanding and produces a spec. Do NOT interview the user; just synthesize what you already know.
