@@ -34,7 +34,7 @@ Without a verification skill, note "No verification skill in this repo" for the 
 
 1. Commit your work.
 2. Call the Skill tool with "code-review" since `origin/<base>` (the branch the user named, else the default), with the ticket or the user's spec as the spec.
-3. Fix its findings and commit, or say in the PR body why not. If a fix touched code, drive the affected feature files again (Verify steps 2 to 4), so the Evidence matches the head you push.
+3. Fix its findings and commit, or say in the PR body why not. If a fix touched code, run Verify again, from Launch to Cleanup, for the feature files it affects, and commit what that run changes.
 4. Push, write the body with the Skill tool and "pr", and open the PR as a draft against the base.
 
 Done when the draft PR exists, its body has the Evidence section, and that Evidence was captured at the pushed head.
