@@ -41,6 +41,7 @@ in its frontmatter, so a diff against upstream stays readable.
 | --- | --- |
 | `loop/implement` | A verification phase: run the repo's verification skill against the change and capture evidence before the PR. Ends at a draft PR written with `pr`, after acting on `code-review`'s findings, not at a commit. |
 | `loop/pr` | A mandatory Evidence section in the PR body, with links to the evidence bucket. |
+| `hand/to-spec` | The spec gets no triage label, so the loop cannot dispatch it whole; only the tickets `to-tickets` cuts get `ready-for-agent`. |
 
 ## Our skills (`skills/loop/`)
 
