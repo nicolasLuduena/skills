@@ -4,7 +4,7 @@ description: "Implement a piece of work based on a spec or set of tickets."
 disable-model-invocation: true
 metadata:
   fork:
-    change: "Adds the Verify step: the change ships with Evidence from the repo's verification skill, not only green tests. Ends at a draft PR whose body the pr skill writes, after acting on code-review's findings, not at a commit: an Implementer told only to commit stopped with no PR (#14)."
+    change: "Adds the Verify step: the change ships with Evidence from the repo's verification skill, not only green tests. Ends at a draft PR whose body the pr skill writes, after acting on code-review's findings, not at a commit: an Implementer told only to commit stopped with no PR (#14). Re-drives Verify after code-review fixes, so Evidence matches the pushed head (#20)."
 ---
 
 Implement the work described by the user in the spec or tickets.
@@ -34,7 +34,7 @@ Without a verification skill, note "No verification skill in this repo" for the 
 
 1. Commit your work.
 2. Call the Skill tool with "code-review" since `origin/<base>` (the branch the user named, else the default), with the ticket or the user's spec as the spec.
-3. Fix its findings and commit, or say in the PR body why not.
+3. Fix its findings and commit, or say in the PR body why not. If a fix touched code, run Verify again, from Launch to Cleanup, for the feature files it affects, and commit what that run changes.
 4. Push, write the body with the Skill tool and "pr", and open the PR as a draft against the base.
 
-Done when the draft PR exists and its body has the Evidence section.
+Done when the draft PR exists, its body has the Evidence section, and that Evidence was captured at the pushed head.
