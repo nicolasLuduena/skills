@@ -32,10 +32,9 @@ Without a verification skill, note "No verification skill in this repo" for the 
 
 ## Finish
 
-The base is the branch the user named, else the repo's default branch.
+1. Commit your work.
+2. Call the Skill tool with "code-review" since `origin/<base>` (the branch the user named, else the default), with the ticket or the user's spec as the spec.
+3. Fix its findings and commit, or say in the PR body why not.
+4. Push, write the body with the Skill tool and "pr", and open the PR as a draft against the base.
 
-1. Call the Skill tool with "code-review" since `origin/<base>`, with the ticket as the spec.
-2. Fix its findings, or say in the PR body why not.
-3. Commit, push the branch, and open the PR as a draft against the base, writing its body with the Skill tool and "pr".
-
-Done when the draft PR exists and its body carries the Evidence summary.
+Done when the draft PR exists and its body has the Evidence section.
