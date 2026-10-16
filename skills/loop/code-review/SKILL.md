@@ -3,7 +3,7 @@ name: code-review
 description: "Two-axis Standards/Spec review since a fixed point (commit, branch, tag, or merge-base): Standards (does the code follow this repo's documented coding standards?) and Spec (does it match what the originating issue/spec asked for?). Runs both in parallel sub-agents and reports them side by side. Use when asked for a Standards/Spec review, or \"review since X\"."
 metadata:
   fork:
-    change: "Never asks when run unattended: defaults the fixed point, the spec and the tracker, and narrows the description so it stops overlapping ponytail-review."
+    change: "Asks only without a remote, so it runs unattended: defaults the fixed point, the spec and the tracker, and narrows the description so it stops overlapping ponytail-review."
 ---
 
 Two-axis review of the diff between `HEAD` and a fixed point:
@@ -19,7 +19,7 @@ The issue tracker should have been provided to you. If not, use `gh` on the repo
 
 ### 1. Pin the fixed point
 
-Whatever the user said is the fixed point (a commit SHA, branch name, tag, `main`, `HEAD~5`, etc.). If none was given, use the PR's base (`origin/<baseRefName>` from `gh pr view`) when this branch has a PR, else `origin/HEAD`. Ask only when there is no remote either.
+Whatever the user said is the fixed point (a commit SHA, branch name, tag, `main`, `HEAD~5`, etc.). If none was given, use the PR's base (`origin/<baseRefName>` from `gh pr view`) when this branch has a PR, else `origin/HEAD` (`git remote set-head origin -a` if it's unset). Ask only when there is no remote either.
 
 Capture the diff command once: `git diff <fixed-point>...HEAD` (three-dot, so the comparison is against the merge-base). Also note the list of commits via `git log <fixed-point>..HEAD --oneline`.
 

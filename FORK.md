@@ -41,7 +41,7 @@ in its frontmatter, so a diff against upstream stays readable.
 | --- | --- |
 | `loop/implement` | A verification phase: run the repo's verification skill against the change and capture evidence before the PR. |
 | `loop/pr` | A mandatory Evidence section in the PR body, with links to the evidence bucket. |
-| `loop/code-review` | Never asks when run unattended: the fixed point defaults to the PR's base or `origin/HEAD`, the spec to the branch's issue, the tracker to `gh` on `origin`. Description narrowed off `ponytail-review`'s turf. |
+| `loop/code-review` | Runs unattended: defaults the fixed point, spec and tracker instead of asking. |
 
 ## Our skills (`skills/loop/`)
 
