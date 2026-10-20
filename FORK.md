@@ -39,10 +39,12 @@ in its frontmatter, so a diff against upstream stays readable.
 
 | Skill | Change |
 | --- | --- |
-| `loop/implement` | A verification phase: run the repo's verification skill against the change and capture evidence before the PR. Ends at a draft PR written with `pr`, after acting on `code-review`'s findings (re-driving Verify when a fix touched code), not at a commit. |
+| `loop/implement` | A verification phase: run the repo's verification skill against the change and capture evidence before the PR. Ends at a draft PR written with `pr`, after acting on `code-review`'s findings (re-driving Verify when a fix touched code), not at a commit. A feature file's end state restates the ticket's acceptance criteria. |
 | `loop/pr` | A mandatory Evidence section in the PR body, with links to the evidence bucket. |
 | `loop/code-review` | Runs unattended: defaults the fixed point, spec and tracker instead of asking. |
 | `hand/to-spec` | The spec gets no triage label, so the loop cannot dispatch it whole; only the tickets `to-tickets` cuts get `ready-for-agent`. |
+| `hand/grilling` | An out-of-scope question before the frontier closes. Implementation rounds: for a code plan, once the product tree is settled, offers a second layer of questions (modules and dependencies, interfaces, seams, data, state, failure, tests) in `codebase-design`'s words. |
+| `hand/to-tickets` | The quiz shows each ticket's acceptance criteria and asks the user to confirm them. |
 
 ## Our skills (`skills/loop/`)
 

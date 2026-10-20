@@ -2,6 +2,9 @@
 name: to-tickets
 description: Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).
 disable-model-invocation: true
+metadata:
+  fork:
+    change: "The quiz shows each ticket's acceptance criteria and asks the user to confirm them, so the agent proposes what done means but the user decides."
 ---
 
 # To Tickets
@@ -46,12 +49,14 @@ Present the proposed breakdown as a numbered list. For each ticket, show:
 - **Title**: short descriptive name
 - **Blocked by**: which other tickets (if any) must complete first
 - **What it delivers**: the end-to-end behaviour this ticket makes work
+- **Acceptance criteria**: the checklist the ticket will carry
 
 Ask the user:
 
 - Does the granularity feel right? (too coarse / too fine)
 - Are the blocking edges correct: does each ticket only depend on tickets that genuinely gate it?
 - Should any tickets be merged or split further?
+- Do the acceptance criteria say what done means, no more and no less?
 
 Iterate until the user approves the breakdown.
 
