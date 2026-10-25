@@ -28,3 +28,9 @@ removing or renaming a skill; it also drops the links to skills that moved or
 went. Leave the `mattpocock-skills` plugin uninstalled: every skill would show
 twice. nico-agent's readiness check (`checks.rs`)
 confirms each skill a prompt names is found for the Harness that runs it.
+
+## Machine setup
+
+`machine/` holds the Firstmate and no-mistakes config these skills run under,
+and `scripts/link-machine.sh` links it into place. `machine/README.md` walks
+through setting up a new machine and a new repo.

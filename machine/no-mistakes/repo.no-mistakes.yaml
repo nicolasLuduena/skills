@@ -1,0 +1,22 @@
+# Starting point for a repo's .no-mistakes.yaml. Copy it to the repo root as
+# .no-mistakes.yaml, fill in the commands, and commit it to the default branch:
+# no-mistakes reads commands, agent, test instructions and the PR template only
+# from there. Copy pull_request_template.md to .github/ in the same commit.
+
+commands:
+  test: <the repo's test command>
+  lint: <the repo's lint command>
+
+test:
+  instructions: |
+    After the test command, drive the change with the repo's verification skill
+    (.agents/skills/verify-*/): VERIFY_RUN_ID=<issue number>, Launch and Doctor,
+    every feature file the diff changes or edits (the closest one when it touches
+    none), capturing Evidence; Cleanup.
+    An end state that differs from its feature file is a finding.
+  evidence:
+    store_in_repo: true
+    attach_media: true
+
+pr:
+  template: .github/pull_request_template.md

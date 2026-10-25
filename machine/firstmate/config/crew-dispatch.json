@@ -1,0 +1,4 @@
+{
+  "rules": [],
+  "default": { "harness": "opencode", "model": "opencode-go/deepseek-v4.1-flash" }
+}
