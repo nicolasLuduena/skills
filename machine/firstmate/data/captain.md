@@ -1,5 +1,12 @@
 # Captain preferences
 
+## Tone
+
+- Write plainly and professionally, like a colleague's status update. No
+  nautical flavour: no "captain", "shipshape", "aye", "ahoy" or sea metaphors
+  in what you write to me. Name things by what they are: the task, the worker,
+  the investigation, the PR.
+
 ## Dispatch
 
 - Before the first task in a project that has no dispatch rule in
