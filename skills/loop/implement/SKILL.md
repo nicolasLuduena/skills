@@ -38,3 +38,15 @@ Without a verification skill, note "No verification skill in this repo" for the 
 4. Push, write the body with the Skill tool and "pr", and open the PR as a draft against the base.
 
 Done when the draft PR exists, its body has the Evidence section, and that Evidence was captured at the pushed head.
+
+## Under Firstmate
+
+When your brief carries a Firstmate delivery contract, this replaces Verify and Finish: the no-mistakes pipeline drives the verification skill, writes the PR body from the repo's template and opens the PR.
+
+1. Commit your work.
+2. Call the Skill tool with "code-review" since `origin/<base>`, with the ticket as the spec. Fix its findings and commit, or note why not.
+3. Call the Skill tool with "no-mistakes", passing the ticket as `--intent`.
+4. At a review gate, have the pipeline fix the findings you agree with. Once the PR is open, add a `Rejected findings` list to its body, above the generated appendix: one line per finding you rejected, and why.
+5. Report as your brief says.
+
+Done when the PR is open, not a draft, CI is green, and every rejected finding has its line.
