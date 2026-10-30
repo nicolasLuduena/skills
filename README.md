@@ -2,7 +2,7 @@
 
 The skills the nico-agent loop and I run on. A frozen fork of
 [mattpocock/skills](https://github.com/mattpocock/skills) plus two of
-[pstack](https://github.com/cursor/plugins/tree/main/pstack)'s and four of our
+[pstack](https://github.com/cursor/plugins/tree/main/pstack)'s and five of our
 own; `FORK.md` says what was taken from where and what was changed.
 
 ## Layout
@@ -31,6 +31,6 @@ confirms each skill a prompt names is found for the Harness that runs it.
 
 ## Machine setup
 
-`machine/` holds the Firstmate and no-mistakes config these skills run under,
+`machine/` holds the no-mistakes config these skills run under,
 and `scripts/link-machine.sh` links it into place. `machine/README.md` walks
 through setting up a new machine and a new repo.

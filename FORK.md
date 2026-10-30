@@ -57,6 +57,12 @@ in its frontmatter, so a diff against upstream stays readable.
 
 Planned, not yet written: the merge-conflict flow.
 
+## Our skills (`skills/hand/`)
+
+| Skill | Job |
+| --- | --- |
+| [`manual-pr-review`](skills/hand/manual-pr-review/SKILL.md) | The human reviewer's. Reads the PR and its sources, gives an ELI5 and a before/after walkthrough, a leaf-to-complex reading order with per-stop questions, findings that are reproduced and cited, and the in/out boundary. Understands and judges a change; a compliance verdict is `loop/code-review`'s job. |
+
 ## Verification: Lauren Tan's, with credit
 
 `skills/verify/` holds two skills from [pstack](https://github.com/cursor/plugins/tree/main/pstack)
