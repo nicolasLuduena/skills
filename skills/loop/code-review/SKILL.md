@@ -3,7 +3,7 @@ name: code-review
 description: "Two-axis Standards/Spec review since a fixed point (commit, branch, tag, or merge-base): Standards (does the code follow this repo's documented coding standards?) and Spec (does it match what the originating issue/spec asked for?). Runs both in parallel sub-agents and reports them side by side. Use when asked for a Standards/Spec review, or \"review since X\"."
 metadata:
   fork:
-    change: "Asks only without a remote, so it runs unattended: defaults the fixed point, the spec and the tracker, and narrows the description so it stops overlapping ponytail-review."
+    change: "Asks only without a remote, so it runs unattended: defaults the fixed point, the spec and the tracker, and narrows the description so it stops overlapping ponytail-review. Standards always flags ADR citations in added comments as hard violations, since agents keep writing them."
 ---
 
 Two-axis review of the diff between `HEAD` and a fixed point:
@@ -59,6 +59,10 @@ Each smell reads *what it is* → *how to fix*; match it against the diff:
 - **Middle Man**: a class or function that mostly just delegates onward. → cut it, call the real target direct.
 - **Refused Bequest**: a subclass or implementer that ignores or overrides most of what it inherits. → drop the inheritance, use composition.
 
+The Standards axis also always carries one **fixed rule**, a hard violation even when the repo documents nothing about comments:
+
+- **No ADR citations in comments**: a comment the diff adds that names the decision it implements (`// Implements ADR-0007`, `# per ADR 3: event-sourced orders`). The ADR and git history already record that, and the comment rots when the ADR is superseded. → delete the citation; keep the rest of the comment only if it still explains the code on its own.
+
 ### 4. Spawn both sub-agents in parallel
 
 Issue both sub-agent calls together, in the foreground, and aggregate the reports they return.
@@ -66,8 +70,8 @@ Issue both sub-agent calls together, in the foreground, and aggregate the report
 **Standards sub-agent prompt** should include:
 
 - The full diff command and commit list.
-- The list of standards-source files you found in step 3, **plus the smell baseline from step 3** pasted in full (the sub-agent has no other access to it).
-- The brief: "Report, per file/hunk where relevant, (a) every place the diff violates a documented standard: cite the standard (file + the rule); and (b) any baseline smell you spot: name it and quote the hunk. Distinguish hard violations from judgement calls: documented-standard breaches can be hard, but baseline smells are always judgement calls, and a documented repo standard overrides the baseline. Skip anything tooling enforces. Under 400 words."
+- The list of standards-source files you found in step 3, **plus the smell baseline and the fixed rule from step 3** pasted in full (the sub-agent has no other access to them).
+- The brief: "Report, per file/hunk where relevant, (a) every place the diff violates a documented standard: cite the standard (file + the rule); (b) any baseline smell you spot: name it and quote the hunk; and (c) every ADR citation the diff adds to a comment, as a hard violation whose fix is deleting it. Distinguish hard violations from judgement calls: documented-standard breaches can be hard, but baseline smells are always judgement calls, and a documented repo standard overrides the baseline. Skip anything tooling enforces. Under 400 words."
 
 **Spec sub-agent prompt** should include:
 
