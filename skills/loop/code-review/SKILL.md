@@ -39,7 +39,7 @@ Look for the originating spec, in this order:
 
 Search the repo for every file that documents how code should be written. When `CODING_STANDARDS.md` or `CONTRIBUTING.md` exists, it must be on the list.
 
-On top of whatever the repo documents, the Standards axis always carries the **smell baseline** below: a fixed set of Fowler code smells (_Refactoring_, ch.3) that applies even when a repo documents nothing. Two rules bind it:
+On top of whatever the repo documents, the Standards axis always carries the **smell baseline** below: a fixed set of code smells, mostly Fowler's (_Refactoring_, ch.3), that applies even when a repo documents nothing. Two rules bind it:
 
 - **The repo overrides.** A documented repo standard always wins; where it endorses something the baseline would flag, suppress the smell.
 - **Always a judgement call.** Each smell is a labelled heuristic ("possible Feature Envy"), never a hard violation. Like any standard here, skip anything tooling already enforces.
@@ -47,7 +47,9 @@ On top of whatever the repo documents, the Standards axis always carries the **s
 Each smell reads *what it is* → *how to fix*; match it against the diff:
 
 - **Mysterious Name**: a function, variable, or type whose name doesn't reveal what it does or holds. → rename it; if no honest name comes, the design's murky.
-- **Duplicated Code**: the same logic shape appears in more than one hunk or file in the change. → extract the shared shape, call it from both.
+- **Duplicated Code**: the same logic, constant, path, or test appears twice, within the change or between it and existing code, including across languages (a shell script and a TS file); or the change hand-rolls what the standard library or an existing helper already does. → extract the shared shape and call it from both, or use what exists. Skip repeats so small that extracting them only adds indirection.
+- **Dead Code**: an export nothing imports, a field nothing reads, a parameter nothing passes, a branch nothing reaches, or a dependency or script nothing uses. → delete it. Not dead: a library's public API, framework entry points, anything loaded by name.
+- **Lazy Element**: a function, type, or local that adds nothing over its contents, such as a helper with one trivial caller or a local used once with no better name than its expression. → inline it. Keep it when its name explains a step or it's a test seam.
 - **Feature Envy**: a method that reaches into another object's data more than its own. → move the method onto the data it envies.
 - **Data Clumps**: the same few fields or params keep travelling together (a type wanting to be born). → bundle them into one type, pass that.
 - **Primitive Obsession**: a primitive or string standing in for a domain concept that deserves its own type. → give the concept its own small type.
@@ -71,7 +73,7 @@ Issue both sub-agent calls together, in the foreground, and aggregate the report
 
 - The full diff command and commit list.
 - The list of standards-source files you found in step 3, **plus the smell baseline and the fixed rule from step 3** pasted in full (the sub-agent has no other access to them).
-- The brief: "Report, per file/hunk where relevant, (a) every place the diff violates a documented standard: cite the standard (file + the rule); (b) any baseline smell you spot: name it and quote the hunk; and (c) every ADR citation the diff adds to a comment, as a hard violation whose fix is deleting it. Distinguish hard violations from judgement calls: documented-standard breaches can be hard, but baseline smells are always judgement calls, and a documented repo standard overrides the baseline. Skip anything tooling enforces. Under 400 words."
+- The brief: "Report, per file/hunk where relevant, (a) every place the diff violates a documented standard: cite the standard (file + the rule); (b) any baseline smell you spot: name it and quote the hunk; and (c) every ADR citation the diff adds to a comment, as a hard violation whose fix is deleting it. Distinguish hard violations from judgement calls: documented-standard breaches can be hard, but baseline smells are always judgement calls, and a documented repo standard overrides the baseline. Skip anything tooling enforces. Read each changed file in full, not only its hunks, because duplication and dead code hide outside them. Confirm every claim that something is unused with a repo-wide search before reporting it. Under 400 words."
 
 **Spec sub-agent prompt** should include:
 
