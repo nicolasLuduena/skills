@@ -4,7 +4,7 @@ description: "Turn the current conversation into a spec and publish it to the pr
 disable-model-invocation: true
 metadata:
   fork:
-    change: "The spec gets no triage label: nico-agent dispatches any open ready-for-agent issue without sub-issues, so a labelled spec could go whole to one Implementer."
+    change: "The spec gets no triage label: nico-agent dispatches any open ready-for-agent issue without sub-issues, so a labelled spec could go whole to one Implementer. Each implementation decision names the user stories that need it, so to-tickets can place it by first use (vertical-slicing)."
 ---
 
 This skill takes the current conversation context and codebase understanding and produces a spec. Do NOT interview the user; just synthesize what you already know.
@@ -54,6 +54,8 @@ A list of implementation decisions that were made. This can include:
 - Schema changes
 - API contracts
 - Specific interactions
+
+End each decision with the numbers of the user stories that need it. `to-tickets` cuts by `vertical-slicing`, so a decision lands in the ticket of the first story that uses it; a decision no story needs is a decision to drop. Call the Skill tool with `vertical-slicing` when unsure where a decision belongs.
 
 Do NOT include specific file paths or code snippets. They may end up being outdated very quickly.
 
