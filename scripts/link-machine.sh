@@ -4,6 +4,7 @@ set -euo pipefail
 # Links the machine config under machine/ into the places each tool reads:
 #   - machine/firstmate/**            -> ~/firstmate/** (or $FM_HOME/**)
 #   - machine/no-mistakes/config.yaml -> ~/.no-mistakes/config.yaml (or $NM_HOME/)
+#   - machine/opencode/commands/*     -> ~/.config/opencode/commands/*
 # Each entry is a symlink into this repo, so a `git pull` keeps the config
 # current and an edit a tool makes lands here, ready to commit. A real file
 # already at a target is moved aside to <target>.bak first: if a tool replaced
@@ -34,3 +35,7 @@ else
 fi
 
 link "$REPO/machine/no-mistakes/config.yaml" "$NM/config.yaml"
+
+for src in "$REPO"/machine/opencode/commands/*; do
+  link "$src" "$HOME/.config/opencode/commands/$(basename "$src")"
+done

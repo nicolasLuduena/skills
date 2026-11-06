@@ -15,6 +15,7 @@ into place, so an edit a tool makes lands in this repo, ready to commit.
   `/stow` adds to it.
 - `no-mistakes/config.yaml`: the global no-mistakes config. Every pipeline
   step runs on OpenCode with `opencode-go/deepseek-v4.1-flash`.
+- `opencode/commands/`: slash commands for skills OpenCode has no command for.
 - `no-mistakes/repo.no-mistakes.yaml` and `no-mistakes/pull_request_template.md`:
   the starting files for each repo the crew works on. They are copied, not
   linked: each repo commits its own.
