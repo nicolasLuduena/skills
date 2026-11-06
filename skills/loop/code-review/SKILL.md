@@ -1,17 +1,19 @@
 ---
 name: code-review
-description: "Two-axis Standards/Spec review since a fixed point (commit, branch, tag, or merge-base): Standards (does the code follow this repo's documented coding standards?) and Spec (does it match what the originating issue/spec asked for?). Runs both in parallel sub-agents and reports them side by side. Use when asked for a Standards/Spec review, or \"review since X\"."
+description: "Four-axis review since a fixed point (commit, branch, tag, or merge-base): Standards (does the code follow this repo's documented coding standards?), Spec (does it match what the originating issue/spec asked for?), Quality (does the change hold up?) and Audit (what is wrong in the code around it?). Runs all four in parallel sub-agents and reports them side by side. Use when asked for a Standards/Spec review, or \"review since X\"."
 metadata:
   fork:
-    change: "Asks only without a remote, so it runs unattended: defaults the fixed point, the spec and the tracker, and narrows the description so it stops overlapping ponytail-review. Standards always flags ADR citations in added comments as hard violations, since agents keep writing them."
+    change: "Asks only without a remote, so it runs unattended: defaults the fixed point, the spec and the tracker, and narrows the description so it stops overlapping ponytail-review. Standards always flags ADR citations in added comments as hard violations, since agents keep writing them. Quality and Audit axes run ponytail-review and ponytail-audit by reading their SKILL.md, since both are user-invoked."
 ---
 
-Two-axis review of the diff between `HEAD` and a fixed point:
+Four-axis review of the diff between `HEAD` and a fixed point:
 
 - **Standards**: does the code conform to this repo's documented coding standards?
 - **Spec**: does the code faithfully implement the originating issue / spec?
+- **Quality**: does the change hold up: bugs, security, load, tests, speed, bloat? (`ponytail-review`)
+- **Audit**: what was already wrong in the folders the change touches? (`ponytail-audit`)
 
-Both axes run as **parallel sub-agents** so they don't pollute each other's context, then this skill aggregates their findings.
+All axes run as **parallel sub-agents** so they don't pollute each other's context, then this skill aggregates their findings.
 
 The issue tracker should have been provided to you. If not, use `gh` on the repo's `origin`.
 
@@ -23,7 +25,7 @@ Whatever the user said is the fixed point (a commit SHA, branch name, tag, `main
 
 Capture the diff command once: `git diff <fixed-point>...HEAD` (three-dot, so the comparison is against the merge-base). Also note the list of commits via `git log <fixed-point>..HEAD --oneline`.
 
-Before going further, confirm the fixed point resolves (`git rev-parse <fixed-point>`) and the diff is non-empty. A bad ref or empty diff should fail here, not inside two parallel sub-agents.
+Before going further, confirm the fixed point resolves (`git rev-parse <fixed-point>`) and the diff is non-empty. A bad ref or empty diff should fail here, not inside the parallel sub-agents.
 
 ### 2. Identify the spec source
 
@@ -65,9 +67,9 @@ The Standards axis also always carries one **fixed rule**, a hard violation even
 
 - **No ADR citations in comments**: a comment the diff adds that names the decision it implements (`// Implements ADR-0007`, `# per ADR 3: event-sourced orders`). The ADR and git history already record that, and the comment rots when the ADR is superseded. → delete the citation; keep the rest of the comment only if it still explains the code on its own.
 
-### 4. Spawn both sub-agents in parallel
+### 4. Spawn the sub-agents in parallel
 
-Issue both sub-agent calls together, in the foreground, and aggregate the reports they return.
+Issue all the sub-agent calls together, in the foreground, and aggregate the reports they return.
 
 **Standards sub-agent prompt** should include:
 
@@ -83,17 +85,33 @@ Issue both sub-agent calls together, in the foreground, and aggregate the report
 
 If the spec is missing, skip the Spec sub-agent and note this in the final report.
 
+**Quality** and **Audit** run two user-invoked skills, so the sub-agent reads each file instead of loading it. Both files sit beside this skill's directory. If one is missing, skip its axis and note this in the final report.
+
+**Quality sub-agent prompt** should include:
+
+- The diff command and commit list.
+- The absolute path of `ponytail-review/SKILL.md`.
+- The brief: "Read that file and follow it, reviewing this diff."
+
+**Audit sub-agent prompt** should include:
+
+- The folders the diff touches: the parent directory of each file in `git diff --name-only <fixed-point>...HEAD`, without repeats.
+- The absolute path of `ponytail-audit/SKILL.md`.
+- The brief: "Read that file and follow it, auditing only these folders. Leave out what the diff itself introduced: the Quality axis reports that."
+
 ### 5. Aggregate
 
-Present the two reports under `## Standards` and `## Spec` headings, verbatim or lightly cleaned. Do **not** merge or rerank findings, because the two axes are deliberately separate (see _Why two axes_).
+Present the reports under `## Standards`, `## Spec`, `## Quality` and `## Audit` headings, verbatim or lightly cleaned. Open `## Audit` with "Already in the code, not for this change to fix.": whoever acts on this review leaves those findings alone. Do **not** merge or rerank findings, because the axes are deliberately separate (see _Why separate axes_).
 
 End with a one-line summary: total findings per axis, and the worst issue _within each axis_ (if any). Don't pick a single winner across axes: that's the reranking the separation exists to prevent.
 
-## Why two axes
+## Why separate axes
 
 A change can pass one axis and fail the other:
 
 - Code that follows every standard but implements the wrong thing → **Standards pass, Spec fail.**
 - Code that does exactly what the issue asked but breaks the project's conventions → **Spec pass, Standards fail.**
 
-Reporting them separately stops one axis from masking the other.
+- Code that follows the standards and the spec can still crash on an empty list → **Standards and Spec pass, Quality fail.**
+
+Reporting them separately stops one axis from masking another.

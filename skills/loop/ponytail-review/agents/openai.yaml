@@ -1,0 +1,5 @@
+interface:
+  display_name: "Ponytail Review"
+  short_description: "Review a change: bugs, risk, load, tests, speed, bloat"
+policy:
+  allow_implicit_invocation: false

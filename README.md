@@ -2,15 +2,15 @@
 
 The skills the nico-agent loop and I run on. A frozen fork of
 [mattpocock/skills](https://github.com/mattpocock/skills) plus two of
-[pstack](https://github.com/cursor/plugins/tree/main/pstack)'s and five of our
-own; `FORK.md` says what was taken from where and what was changed.
+[pstack](https://github.com/cursor/plugins/tree/main/pstack)'s, two of
+[ponytail](https://github.com/DietrichGebert/ponytail)'s and five of our own; `FORK.md` says what was taken from where and what was changed.
 
 ## Layout
 
 - `skills/loop/`: what nico-agent's prompts call, and what those call in turn.
   `implement`, `research`, `verdict`, `faux-nico`, `quality-scan` and `morning`
-  are the entry points; `pr`, `tdd`, `code-review` and `codebase-design` are
-  reached from them.
+  are the entry points; `pr`, `tdd`, `code-review`, `codebase-design`,
+  `ponytail-review` and `ponytail-audit` are reached from them.
 - `skills/verify/`: `create-verification-skill` and
   `maintain-verification-skill`, which make and keep a Repo's `verify-<app>`
   skill, the thing `implement` and `verdict` drive.

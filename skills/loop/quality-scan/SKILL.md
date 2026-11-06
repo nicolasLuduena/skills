@@ -29,7 +29,7 @@ Done when you hold the pre-approved list (maybe empty), the write rules, the ope
 
 Two passes over the whole Repo, both read-only.
 
-1. **Audit.** Call the Skill tool with "ponytail-audit". Keep its numbered findings in their groups: Must fix, Should fix, Nice to have.
+1. **Audit.** Read `ponytail-audit/SKILL.md`, beside this skill's directory, and follow it. It is user-invoked, so it cannot be loaded as a skill. Keep its numbered findings in their groups: Must fix, Should fix, Nice to have.
 2. **Deepening scan.** Call the Skill tool with "codebase-design" and use its vocabulary (module, interface, depth, seam, adapter, leverage, locality). Read any ADRs, which record decisions not to re-litigate. Walk back a good stretch of `git log --oneline` to find the hot spots, the areas that keep changing, and look there first. Then walk the codebase organically, in a sub-agent when you can start one, noting friction:
    - understanding one concept means bouncing between many small modules;
    - a **shallow** module, its interface nearly as complex as its implementation;
