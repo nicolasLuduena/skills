@@ -1,0 +1,3 @@
+interface:
+  display_name: "Vertical Slicing"
+  short_description: "Cut work into slices that define only what they use"

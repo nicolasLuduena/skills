@@ -42,9 +42,9 @@ in its frontmatter, so a diff against upstream stays readable.
 | `loop/implement` | A verification phase: run the repo's verification skill against the change and capture evidence before the PR. Ends at a draft PR written with `pr`, after acting on `code-review`'s findings (re-driving Verify when a fix touched code), not at a commit. A feature file's end state restates the ticket's acceptance criteria. |
 | `loop/pr` | A mandatory Evidence section in the PR body, with links to the evidence bucket. |
 | `loop/code-review` | Runs unattended: defaults the fixed point, spec and tracker instead of asking. Standards always flags ADR citations in added comments as hard violations, so the fix pass deletes them. Quality and Audit axes run `ponytail-review` on the diff and `ponytail-audit` on the folders it touches. |
-| `hand/to-spec` | The spec gets no triage label, so the loop cannot dispatch it whole; only the tickets `to-tickets` cuts get `ready-for-agent`. |
+| `hand/to-spec` | The spec gets no triage label, so the loop cannot dispatch it whole; only the tickets `to-tickets` cuts get `ready-for-agent`. Each implementation decision names the user stories that need it, so `to-tickets` can place it by first use. |
 | `hand/grilling` | An out-of-scope question before the frontier closes. Implementation rounds: for a code plan, once the product tree is settled, offers a second layer of questions (modules and dependencies, interfaces, seams, data, state, failure, tests) in `codebase-design`'s words. |
-| `hand/to-tickets` | The quiz shows each ticket's acceptance criteria and asks the user to confirm them. |
+| `hand/to-tickets` | The quiz shows each ticket's acceptance criteria and asks the user to confirm them. The slicing rules live in `vertical-slicing`; a wide refactor's expand ships with its first migrate batch. |
 
 ## Our skills (`skills/loop/`)
 
@@ -62,6 +62,7 @@ Planned, not yet written: the merge-conflict flow.
 | Skill | Job |
 | --- | --- |
 | [`manual-pr-review`](skills/hand/manual-pr-review/SKILL.md) | The human reviewer's. Reads the PR and its sources, gives an ELI5 and a before/after walkthrough, a leaf-to-complex reading order with per-stop questions, findings that are reproduced and cited, and the in/out boundary. Understands and judges a change; a compliance verdict is `loop/code-review`'s job. |
+| [`vertical-slicing`](skills/hand/vertical-slicing/SKILL.md) | Shared reference for `to-spec` and `to-tickets`. Each ticket is a vertical slice, and every definition (function, constant, class, type, column, endpoint) lands in the ticket that first uses it, because a human reviews each PR alone. Names the one allowed horizontal cut and how to mark it. |
 
 ## Ponytail's review and audit
 
