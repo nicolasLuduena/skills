@@ -76,6 +76,13 @@ Both are user-invoked. `code-review` and `quality-scan` run them by reading the
 `SKILL.md`, because the Skill tool refuses a user-invoked skill. nico-agent's
 readiness check only follows Skill tool calls, so it does not cover these two.
 
+## shadcn's improve
+
+`skills/hand/improve` comes from [shadcn/improve](https://github.com/shadcn/improve)
+by shadcn, MIT, copied at `cac56e1` on 2026-11-09 with the license beside it.
+Only change: it is user-invoked. The body is upstream's, em-dashes included, so
+a diff against upstream stays clean.
+
 ## Verification: Lauren Tan's, with credit
 
 `skills/verify/` holds two skills from [pstack](https://github.com/cursor/plugins/tree/main/pstack)

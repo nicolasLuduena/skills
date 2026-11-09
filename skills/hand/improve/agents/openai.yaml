@@ -1,0 +1,5 @@
+interface:
+  display_name: "Improve"
+  short_description: "Audit a codebase and write handoff plans for other agents"
+policy:
+  allow_implicit_invocation: false
