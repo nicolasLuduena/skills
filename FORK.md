@@ -80,8 +80,8 @@ readiness check only follows Skill tool calls, so it does not cover these two.
 
 `skills/hand/improve` comes from [shadcn/improve](https://github.com/shadcn/improve)
 by shadcn, MIT, copied at `cac56e1` on 2026-11-09 with the license beside it.
-Only change: it is user-invoked. The body is upstream's, em-dashes included, so
-a diff against upstream stays clean.
+Changes: it is user-invoked, and its em-dashes are rewritten as commas, colons,
+semicolons or parentheses. The wording is otherwise upstream's.
 
 ## Verification: Lauren Tan's, with credit
 
