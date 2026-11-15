@@ -3,7 +3,7 @@ name: pr
 description: "Use when writing a PR body."
 metadata:
   fork:
-    change: "The Evidence section quotes what the verification skill observed per feature and links the Evidence files."
+    change: "The Evidence section quotes what the verification skill observed per feature and embeds its images, so the PR body is the whole proof."
   credits:
     skill: show-me
     author: Dex Horthy
@@ -23,7 +23,7 @@ Use this template for writing the PR body:
 - **Before:** <screenshot/output/failing test run>
   **After:** <screenshot/output/passing test run>
 
-Verified with `verify-<app>`, run `<VERIFY_RUN_ID>`: <link to the Evidence folder>
+Verified with `verify-<app>`, run `<VERIFY_RUN_ID>`:
 
 - **<feature file>:** <the command driven> → <the observed end state, quoted from the Evidence>
 
@@ -169,7 +169,7 @@ Screenshots are S-tier - when the environment is set up for it and the change is
 
 Execution-based evidence is A-tier. Test results, console output. Show the exact test that now fails and passes, using pseudocode.
 
-The verification lines come from the Verify step of `implement`: one line per feature file driven, quoting the command and the end state from the files under `.evidence/<VERIFY_RUN_ID>/`, so a reader can check the claim against the artifact. Link the folder: the Bucket URL when the dispatch prompt gives one, else the repo-relative path. When the repo has no verification skill, write "No verification skill in this repo" in place of these lines, so its absence is visible rather than silent.
+The verification lines come from the Verify step of `implement`: one line per feature file driven, quoting the command and the end state from the files under `.evidence/<VERIFY_RUN_ID>/`. The body is the whole proof, so put the Evidence in it: quote text output in a fenced block (a long one inside `<details>`), and embed each image beside its line as `![<what it shows>](https://github.com/<owner>/<repo>/blob/<commit>/.evidence/<VERIFY_RUN_ID>/<file>?raw=true)`, `<commit>` being the evidence commit `implement` pushed. Never link a local path. When the repo has no verification skill, write "No verification skill in this repo" in place of these lines, so its absence is visible rather than silent.
 
 ### Merge Danger
 

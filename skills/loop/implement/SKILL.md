@@ -4,7 +4,7 @@ description: "Implement a piece of work based on a spec or set of tickets."
 disable-model-invocation: true
 metadata:
   fork:
-    change: "Adds the Verify step: the change ships with Evidence from the repo's verification skill, not only green tests. Ends at a draft PR whose body the pr skill writes, after acting on code-review's findings, not at a commit: an Implementer told only to commit stopped with no PR (#14). Re-drives Verify after code-review fixes, so Evidence matches the pushed head (#20). A feature file's end state restates the ticket's acceptance criteria."
+    change: "Adds the Verify step: the change ships with Evidence from the repo's verification skill, not only green tests. Ends at a draft PR whose body the pr skill writes, after acting on code-review's findings, not at a commit: an Implementer told only to commit stopped with no PR (#14). Re-drives Verify after code-review fixes, so Evidence matches the pushed head (#20). Evidence lives in the PR body: text quoted, images pushed to an orphan branch and embedded. A feature file's end state restates the ticket's acceptance criteria."
 ---
 
 Implement the work described by the user in the spec or tickets.
@@ -35,18 +35,16 @@ Without a verification skill, note "No verification skill in this repo" for the 
 1. Commit your work.
 2. Call the Skill tool with "code-review" since `origin/<base>` (the branch the user named, else the default), with the ticket or the user's spec as the spec.
 3. Fix its findings and commit, or say in the PR body why not. If a fix touched code, run Verify again, from Launch to Cleanup, for the feature files it affects, and commit what that run changes.
-4. Push, write the body with the Skill tool and "pr", and open the PR as a draft against the base.
+4. Push. When the Evidence holds images, publish them on a branch that shares no history with the code, and note the commit for the body's links:
 
-Done when the draft PR exists, its body has the Evidence section, and that Evidence was captured at the pushed head.
+   ```sh
+   export GIT_INDEX_FILE="$(mktemp -u)"
+   git add -f .evidence/<VERIFY_RUN_ID>/
+   commit=$(git commit-tree "$(git write-tree)" -m "Evidence for <VERIFY_RUN_ID>")
+   unset GIT_INDEX_FILE
+   git push -f origin "$commit:refs/heads/evidence/<VERIFY_RUN_ID>"
+   ```
 
-## Under Firstmate
+5. Write the body with the Skill tool and "pr", and open the PR as a draft against the base.
 
-When your brief carries a Firstmate delivery contract, this replaces Verify and Finish: the no-mistakes pipeline drives the verification skill, writes the PR body from the repo's template and opens the PR.
-
-1. Commit your work.
-2. Call the Skill tool with "code-review" since `origin/<base>`, with the ticket as the spec. Fix its findings and commit, or note why not.
-3. Call the Skill tool with "no-mistakes", passing the ticket as `--intent`.
-4. At a review gate, have the pipeline fix the findings you agree with. Once the PR is open, add a `Rejected findings` list to its body, above the generated appendix: one line per finding you rejected, and why.
-5. Report as your brief says.
-
-Done when the PR is open, not a draft, CI is green, and every rejected finding has its line.
+Done when the draft PR exists, its body has the Evidence section, every image it embeds renders, and that Evidence was captured at the pushed head.

@@ -1,5 +1,0 @@
-interface:
-  display_name: "Morning"
-  short_description: "Write the Morning summary from nico-agent status"
-policy:
-  allow_implicit_invocation: false

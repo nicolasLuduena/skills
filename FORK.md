@@ -39,10 +39,10 @@ in its frontmatter, so a diff against upstream stays readable.
 
 | Skill | Change |
 | --- | --- |
-| `loop/implement` | A verification phase: run the repo's verification skill against the change and capture evidence before the PR. Ends at a draft PR written with `pr`, after acting on `code-review`'s findings (re-driving Verify when a fix touched code), not at a commit. A feature file's end state restates the ticket's acceptance criteria. |
-| `loop/pr` | A mandatory Evidence section in the PR body, with links to the evidence bucket. |
+| `loop/implement` | A verification phase: run the repo's verification skill against the change and capture evidence before the PR, pushing its images to an orphan `evidence/<id>` branch for the body to embed. Ends at a draft PR written with `pr`, after acting on `code-review`'s findings (re-driving Verify when a fix touched code), not at a commit. A feature file's end state restates the ticket's acceptance criteria. |
+| `loop/pr` | A mandatory Evidence section in the PR body: the verification skill's output quoted, its images embedded. |
 | `loop/code-review` | Runs unattended: defaults the fixed point, spec and tracker instead of asking. Standards always flags ADR citations in added comments as hard violations, so the fix pass deletes them. Quality and Audit axes run `ponytail-review` on the diff and `ponytail-audit` on the folders it touches. |
-| `hand/to-spec` | The spec gets no triage label, so the loop cannot dispatch it whole; only the tickets `to-tickets` cuts get `ready-for-agent`. Each implementation decision names the user stories that need it, so `to-tickets` can place it by first use. |
+| `hand/to-spec` | The spec gets no triage label, so no agent takes it whole; only the tickets `to-tickets` cuts get `ready-for-agent`. Each implementation decision names the user stories that need it, so `to-tickets` can place it by first use. |
 | `hand/grilling` | An out-of-scope question before the frontier closes. Implementation rounds: for a code plan, once the product tree is settled, offers a second layer of questions (modules and dependencies, interfaces, seams, data, state, failure, tests) in `codebase-design`'s words. |
 | `hand/to-tickets` | The quiz shows each ticket's acceptance criteria and asks the user to confirm them. The slicing rules live in `vertical-slicing`; a wide refactor's expand ships with its first migrate batch. |
 
@@ -51,9 +51,6 @@ in its frontmatter, so a diff against upstream stays readable.
 | Skill | Job |
 | --- | --- |
 | [`quality-scan`](skills/loop/quality-scan/SKILL.md) | Weekly per repo. Runs ponytail's audit and Matt's deepening scan and files issues, at most five of its own open at once: three pre-approved as `ready-for-agent` + `gardening`, two of the rest as `needs-triage`. |
-| [`faux-nico`](skills/loop/faux-nico/SKILL.md) | Stands in for Nico when he is away. Answers an Asking Implementer from the repo's `PRODUCT.md`, the issue and its parent when they settle the question, otherwise ends so the question reaches him. |
-| [`morning`](skills/loop/morning/SKILL.md) | Once a day. Reads what `nico-agent status --since` shows since the last one and writes `morning.md` in six sections: merge these in dependency order, answer these, fix these, what landed, what the scan filed, what faux-nico said. |
-| [`verdict`](skills/loop/verdict/SKILL.md) | The Reviewer's. Re-runs the repo's verification skill at the PR's head, holds the PR's Evidence against it, holds the Implementer's Rulings on earlier Findings to account, and records pass or fail with `nico-agent verdict`. Never writes to GitHub. |
 
 Planned, not yet written: the merge-conflict flow.
 
@@ -73,8 +70,7 @@ these two: the plugin's hooks, band and always-on `ponytail` skill stay out, so
 nothing here changes a prompt until one is called.
 
 Both are user-invoked. `code-review` and `quality-scan` run them by reading the
-`SKILL.md`, because the Skill tool refuses a user-invoked skill. nico-agent's
-readiness check only follows Skill tool calls, so it does not cover these two.
+`SKILL.md`, because the Skill tool refuses a user-invoked skill.
 
 ## shadcn's improve
 
@@ -95,7 +91,7 @@ and the [upkeep pass](https://github.com/cursor/plugins/blob/main/pstack/skills/
 
 | Skill | Hers, repointed |
 | --- | --- |
-| `verify/create-verification-skill` | Generates a repo's `verify-<app>` skill and feature map. Output lands in `.agents/skills/` so every Harness finds it; Evidence goes to `.evidence/<issue>/`, copied to the Bucket on Verdict. |
-| `verify/maintain-verification-skill` | Keeps the feature map honest. Run weekly per Repo by the loop as a gardening issue. |
+| `verify/create-verification-skill` | Generates a repo's `verify-<app>` skill and feature map. Output lands in `.agents/skills/` so every Harness finds it; Evidence goes to `.evidence/<issue>/`, kept out of git and shown in the PR body. |
+| `verify/maintain-verification-skill` | Keeps the feature map honest. Looks under `.agents/skills/verify-*/`. |
 
 Pilot repo: `txpipe-shop/audit-notes`.
