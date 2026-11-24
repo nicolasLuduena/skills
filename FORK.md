@@ -79,6 +79,14 @@ by shadcn, MIT, copied at `cac56e1` on 2026-11-09 with the license beside it.
 Changes: it is user-invoked, and its em-dashes are rewritten as commas, colons,
 semicolons or parentheses. The wording is otherwise upstream's.
 
+## blader's humanizer
+
+`skills/hand/humanizer` comes from [blader/humanizer](https://github.com/blader/humanizer)
+by Siqi Chen (blader), MIT, copied at `a32f244` (v4.0.0) on 2026-11-24 with the
+license beside it. Changes: it is user-invoked, and section 8 names the dash
+characters by code point and shows double hyphens in its example, so the file
+holds no em-dash. The wording is otherwise upstream's.
+
 ## Verification: Lauren Tan's, with credit
 
 `skills/verify/` holds two skills from [pstack](https://github.com/cursor/plugins/tree/main/pstack)

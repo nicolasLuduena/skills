@@ -3,7 +3,8 @@
 The skills my agents and I run on. A frozen fork of
 [mattpocock/skills](https://github.com/mattpocock/skills) plus two of
 [pstack](https://github.com/cursor/plugins/tree/main/pstack)'s, two of
-[ponytail](https://github.com/DietrichGebert/ponytail)'s, [improve](https://github.com/shadcn/improve) from shadcn and six of our own; `FORK.md` says what was taken from where and what was changed.
+[ponytail](https://github.com/DietrichGebert/ponytail)'s, [improve](https://github.com/shadcn/improve) from shadcn,
+[humanizer](https://github.com/blader/humanizer) from blader and six of our own; `FORK.md` says what was taken from where and what was changed.
 
 ## Layout
 
