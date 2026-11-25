@@ -10,7 +10,8 @@ set -euo pipefail
 # skills current. Re-run after adding, removing or renaming a skill.
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
-DESTS=("$HOME/.claude/skills" "$HOME/.agents/skills" "$HOME/.gemini/config/skills")
+GEMINI_DEST="$HOME/.gemini/config/skills"
+DESTS=("$HOME/.claude/skills" "$HOME/.agents/skills" "$GEMINI_DEST")
 
 names=()
 srcs=()
@@ -44,6 +45,22 @@ for DEST in "${DESTS[@]}"; do
     name="${names[$i]}"
     src="${srcs[$i]}"
     target="$DEST/$name"
+
+    if [ "$DEST" = "$GEMINI_DEST" ] && { [ -e "$target" ] || [ -L "$target" ]; }; then
+      if [ -L "$target" ]; then
+        resolved_target="$(readlink -f "$target" 2>/dev/null || true)"
+        case "$resolved_target" in
+          "$REPO/skills/"*) ;;
+          *)
+            echo "warning: $target is not a skill link into this repo; leaving it untouched" >&2
+            continue
+            ;;
+        esac
+      else
+        echo "warning: $target already exists and is not a symlink into this repo; leaving it untouched" >&2
+        continue
+      fi
+    fi
 
     if [ -e "$target" ] && [ ! -L "$target" ]; then
       rm -rf "$target"
