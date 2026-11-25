@@ -5,11 +5,12 @@ set -euo pipefail
 # reads:
 #   - ~/.claude/skills: Claude Code
 #   - ~/.agents/skills: Codex and other Agent Skills-compatible harnesses
+#   - ~/.gemini/config/skills: Antigravity
 # Each entry is a symlink into this repo, so a `git pull` keeps installed
 # skills current. Re-run after adding, removing or renaming a skill.
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
-DESTS=("$HOME/.claude/skills" "$HOME/.agents/skills")
+DESTS=("$HOME/.claude/skills" "$HOME/.agents/skills" "$HOME/.gemini/config/skills")
 
 names=()
 srcs=()

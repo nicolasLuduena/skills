@@ -22,11 +22,11 @@ codex's invocation policy.
 
 ## Install
 
-`scripts/link-skills.sh` symlinks every skill into `~/.claude/skills` and
-`~/.agents/skills`, so a `git pull` keeps them current. Re-run it after adding,
-removing or renaming a skill; it also drops the links to skills that moved or
-went. Leave the `mattpocock-skills` plugin uninstalled: every skill would show
-twice.
+`scripts/link-skills.sh` symlinks every skill into `~/.claude/skills`,
+`~/.agents/skills` and `~/.gemini/config/skills`, so a `git pull` keeps them
+current. Re-run it after adding, removing or renaming a skill; it also drops
+the links to skills that moved or went. Leave the `mattpocock-skills` plugin
+uninstalled: every skill would show twice.
 
 ## Machine setup
 
